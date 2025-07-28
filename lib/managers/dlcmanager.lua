@@ -43,7 +43,7 @@ function GenericDLCManager:give_dlc_package()
 				for _, loot_drop in ipairs(data.content.loot_drops or {}) do
 					for i = 1, loot_drop.amount do
 						local entry = tweak_data.blackmarket[loot_drop.type_items][loot_drop.item_entry]
-						local global_value = package_id
+						local global_value = loot_drop.global_value or data.content.loot_global_value or package_id
 						print(i .. "  give", loot_drop.type_items, loot_drop.item_entry, global_value)
 						managers.blackmarket:add_to_inventory(global_value, loot_drop.type_items, loot_drop.item_entry)
 					end
@@ -330,7 +330,7 @@ function WINDLCManager:init()
 		Global.dlc_manager.all_dlc_data = {
 			full_game = {app_id = "218620", verified = true},
 			preorder = {
-				app_id = "207811",
+				app_id = "247450",
 				verified = true,
 				no_install = true
 			}

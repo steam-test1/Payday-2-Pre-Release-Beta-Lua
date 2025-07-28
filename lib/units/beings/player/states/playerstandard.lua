@@ -278,13 +278,21 @@ end
 local win32 = SystemInfo:platform() == Idstring("WIN32")
 
 function PlayerStandard:_get_input(t, dt)
-	if self._state_data.controller_enabled ~= self._controller:enabled() and self._state_data.controller_enabled then
+	if self._state_data.controller_enabled ~= self._controller:enabled() then
+		if self._state_data.controller_enabled then
+			local release_interact = Global.game_settings.single_player or not managers.menu:get_controller():get_input_bool("interact")
+			local input = {
+				btn_steelsight_release = true,
+				btn_interact_release = release_interact,
+				btn_use_item_release = true
+			}
+			self._state_data.controller_enabled = self._controller:enabled()
+			return input
+		end
+	elseif not self._state_data.controller_enabled then
 		local input = {
-			btn_steelsight_release = true,
-			btn_interact_release = true,
-			btn_use_item_release = true
+			btn_interact_release = managers.menu:get_controller():get_input_released("interact")
 		}
-		self._state_data.controller_enabled = self._controller:enabled()
 		return input
 	end
 	self._state_data.controller_enabled = self._controller:enabled()
@@ -505,7 +513,7 @@ function PlayerStandard:_update_foley(t, input)
 		self._unit:set_driving("script")
 		self._state_data.in_air = false
 		local from = self._pos + math.UP * 10
-		local to = self._pos - math.UP * 30
+		local to = self._pos - math.UP * 60
 		local material_name, pos, norm = World:pick_decal_material(from, to, self._slotmask_bullet_impact_targets)
 		self._unit:sound():play_land(material_name)
 		if self._unit:character_damage():damage_fall({

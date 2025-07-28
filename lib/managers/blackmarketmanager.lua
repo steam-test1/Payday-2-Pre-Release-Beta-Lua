@@ -282,6 +282,26 @@ function BlackMarketManager:equip_armor(armor_id)
 	MenuCallbackHandler:_update_outfit_information()
 end
 
+function BlackMarketManager:_update_cached_mask()
+	do return end
+	if SystemInfo:platform() ~= Idstring("X360") then
+		return
+	end
+	Application:debug("[BlackMarketManager:_update_cached_mask()]")
+	local old_cached_mask = Global.cached_player_mask
+	if old_cached_mask and old_cached_mask.mask_id ~= "character_locked" then
+		local blueprint = old_cached_mask.blueprint
+		local pattern_id = blueprint.pattern.id
+		local material_id = blueprint.material.id
+		local pattern = Idstring(tweak_data.blackmarket.textures[pattern_id].texture)
+		local reflection = Idstring(tweak_data.blackmarket.materials[material_id].texture)
+		managers.dyn_resource:unload(Idstring("unit"), Idstring(tweak_data.blackmarket.masks[old_cached_mask.mask_id].unit), DynamicResourceManager.DYN_RESOURCES_PACKAGE, false)
+		TextureCache:unretrieve(pattern)
+		TextureCache:unretrieve(reflection)
+	end
+	Global.cached_player_mask = nil
+end
+
 function BlackMarketManager:equip_mask(slot)
 	local category = "masks"
 	if not Global.blackmarket_manager.crafted_items[category] then
@@ -290,9 +310,37 @@ function BlackMarketManager:equip_mask(slot)
 	for s, data in pairs(Global.blackmarket_manager.crafted_items[category]) do
 		data.equipped = s == slot
 	end
+	local new_mask_data = Global.blackmarket_manager.crafted_items[category][slot]
 	if managers.menu_scene then
-		local data = Global.blackmarket_manager.crafted_items[category][slot]
-		managers.menu_scene:set_character_mask_by_id(data.mask_id, data.blueprint)
+		managers.menu_scene:set_character_mask_by_id(new_mask_data.mask_id, new_mask_data.blueprint)
+	end
+	if SystemInfo:platform() == Idstring("X360") then
+		repeat
+			do break end -- pseudo-goto
+			local old_cached_mask = Global.cached_player_mask
+			Global.cached_player_mask = new_mask_data
+			Application:debug("[BlackMarketManager:equip_mask()] Set cached mask")
+			if new_mask_data and new_mask_data.mask_id ~= "character_locked" then
+				local blueprint = new_mask_data.blueprint
+				local pattern_id = blueprint.pattern.id
+				local material_id = blueprint.material.id
+				local pattern = tweak_data.blackmarket.textures[pattern_id].texture
+				local reflection = tweak_data.blackmarket.materials[material_id].texture
+				managers.dyn_resource:load(Idstring("unit"), Idstring(tweak_data.blackmarket.masks[new_mask_data.mask_id].unit), DynamicResourceManager.DYN_RESOURCES_PACKAGE, false)
+				TextureCache:retrieve(pattern, "NORMAL")
+				TextureCache:retrieve(reflection, "NORMAL")
+			end
+			if old_cached_mask and old_cached_mask.mask_id ~= "character_locked" then
+				local blueprint = old_cached_mask.blueprint
+				local pattern_id = blueprint.pattern.id
+				local material_id = blueprint.material.id
+				local pattern = Idstring(tweak_data.blackmarket.textures[pattern_id].texture)
+				local reflection = Idstring(tweak_data.blackmarket.materials[material_id].texture)
+				managers.dyn_resource:unload(Idstring("unit"), Idstring(tweak_data.blackmarket.masks[old_cached_mask.mask_id].unit), DynamicResourceManager.DYN_RESOURCES_PACKAGE, false)
+				TextureCache:unretrieve(pattern)
+				TextureCache:unretrieve(reflection)
+			end
+		until true
 	end
 	MenuCallbackHandler:_update_outfit_information()
 end
@@ -692,7 +740,7 @@ function BlackMarketManager:add_to_inventory(global_value, category, id, not_new
 		self._global.new_drops[global_value][category][id] = true
 	end
 	if self._global.new_item_type_unlocked[category] == nil and category ~= "cash" then
-		self._global.new_item_type_unlocked[category] = true
+		self._global.new_item_type_unlocked[category] = id
 	end
 	self:alter_global_value_item(global_value, category, nil, id, INV_ADD)
 end
@@ -1148,8 +1196,9 @@ function BlackMarketManager:get_dropable_mods_by_weapon_id(weapon_id)
 		end
 	end
 	local content, loot_drops
-	for global_value, dlc in pairs(tweak_data.dlc) do
-		if dlc.free or managers.dlc:has_dlc(global_value) then
+	for package_id, dlc in pairs(tweak_data.dlc) do
+		local global_value = dlc.content and dlc.content.loot_global_value or package_id
+		if (dlc.free or managers.dlc:has_dlc(global_value)) and global_value ~= "normal" and global_value ~= "infamous" then
 			content = dlc.content
 			loot_drops = content and content.loot_drops or {}
 			for _, item_data in ipairs(loot_drops) do
@@ -1457,7 +1506,7 @@ function BlackMarketManager:on_aquired_weapon_platform(upgrade, id, loading)
 		self._global.new_drops.normal = self._global.new_drops.normal or {}
 		self._global.new_drops.normal[category] = self._global.new_drops.normal[category] or {}
 		self._global.new_drops.normal[category][id] = true
-		self._global.new_item_type_unlocked[category] = managers.weapon_factory:get_weapon_name_by_factory_id(upgrade.factory_id)
+		self._global.new_item_type_unlocked[category] = upgrade.factory_id
 	end
 end
 
@@ -1742,7 +1791,7 @@ function BlackMarketManager:on_aquired_armor(upgrade, id, loading)
 		self._global.new_drops.normal.armors = self._global.new_drops.normal.armors or {}
 		self._global.new_drops.normal.armors[upgrade.armor_id] = true
 		if self._global.new_item_type_unlocked.armors == nil then
-			self._global.new_item_type_unlocked.armors = true
+			self._global.new_item_type_unlocked.armors = upgrade.armor_id
 		end
 	end
 end
@@ -2345,87 +2394,89 @@ function BlackMarketManager:_verify_dlc_items()
 	Application:debug("-----------------------BlackMarketManager:_verify_dlc_items-----------------------")
 	local owns_dlc
 	for package_id, data in pairs(tweak_data.dlc) do
-		owns_dlc = tweak_data.lootdrop.global_values[package_id].dlc and (data.free or managers.dlc:has_dlc(package_id))
-		print(owns_dlc, tweak_data.lootdrop.global_values[package_id].dlc, not data.free, not managers.dlc:has_dlc(package_id))
-		if owns_dlc then
-		elseif self._global.global_value_items[package_id] then
-			print("You do not own " .. package_id .. ", will lock all related items.")
-			local all_crafted_items = self._global.global_value_items[package_id].crafted_items or {}
-			local primaries = all_crafted_items.primaries or {}
-			local secondaries = all_crafted_items.secondaries or {}
-			for slot, parts in pairs(primaries) do
-				local crafted = managers.blackmarket:get_crafted_category("primaries")
-				if not crafted then
-					break
-				end
-				crafted = crafted[slot]
-				if crafted then
-					local factory_id = crafted.factory_id
-					local default_blueprint = managers.weapon_factory:get_default_blueprint_by_factory_id(factory_id)
-					for part_id, only_one in pairs(parts) do
-						if only_one ~= 1 then
-							Application:error("[BlackMarketManager] _verify_dlc_items(): something wrong with", primaries, part_id, only_one)
-						end
-						local default_mod
-						local ids_id = Idstring(tweak_data.weapon.factory.parts[part_id].type)
-						for i, d_mod in ipairs(default_blueprint) do
-							if Idstring(tweak_data.weapon.factory.parts[d_mod].type) == ids_id then
-								default_mod = d_mod
-								break
-							end
-						end
-						if default_mod then
-							self:buy_and_modify_weapon("primaries", slot, "normal", default_mod, true)
-						else
-							managers.blackmarket:on_sell_weapon_part("primaries", slot, package_id, part_id)
-						end
-						managers.money:refund_weapon_part(crafted.weapon_id, part_id, package_id)
-					end
-				end
-			end
-			for slot, parts in pairs(secondaries) do
-				local crafted = managers.blackmarket:get_crafted_category("secondaries")
-				if not crafted then
-					break
-				end
-				crafted = crafted[slot]
-				if crafted then
-					local factory_id = crafted.factory_id
-					local default_blueprint = managers.weapon_factory:get_default_blueprint_by_factory_id(factory_id)
-					for part_id, only_one in pairs(parts) do
-						if only_one ~= 1 then
-							Application:error("[BlackMarketManager] _verify_dlc_items(): something wrong with", secondaries, part_id, only_one)
-						end
-						local default_mod
-						local ids_id = Idstring(tweak_data.weapon.factory.parts[part_id].type)
-						for i, d_mod in ipairs(default_blueprint) do
-							if Idstring(tweak_data.weapon.factory.parts[d_mod].type) == ids_id then
-								default_mod = d_mod
-								break
-							end
-						end
-						if default_mod then
-							self:buy_and_modify_weapon("secondaries", slot, "normal", default_mod, true)
-						else
-							managers.blackmarket:on_sell_weapon_part("secondaries", slot, package_id, part_id)
-						end
-						managers.money:refund_weapon_part(crafted.weapon_id, part_id, package_id)
-					end
-				end
-			end
-			local mask = managers.blackmarket:equipped_mask()
-			local is_locked = mask.global_value == package_id
-			if not is_locked then
-				for _, part in pairs(mask.blueprint) do
-					print(package_id, inspect(part))
-					is_locked = part.global_value == package_id
-					if is_locked then
+		if tweak_data.lootdrop.global_values[package_id] then
+			owns_dlc = tweak_data.lootdrop.global_values[package_id].dlc and (data.free or managers.dlc:has_dlc(package_id))
+			print(owns_dlc, tweak_data.lootdrop.global_values[package_id].dlc, not data.free, not managers.dlc:has_dlc(package_id))
+			if owns_dlc then
+			elseif self._global.global_value_items[package_id] then
+				print("You do not own " .. package_id .. ", will lock all related items.")
+				local all_crafted_items = self._global.global_value_items[package_id].crafted_items or {}
+				local primaries = all_crafted_items.primaries or {}
+				local secondaries = all_crafted_items.secondaries or {}
+				for slot, parts in pairs(primaries) do
+					local crafted = managers.blackmarket:get_crafted_category("primaries")
+					if not crafted then
 						break
 					end
+					crafted = crafted[slot]
+					if crafted then
+						local factory_id = crafted.factory_id
+						local default_blueprint = managers.weapon_factory:get_default_blueprint_by_factory_id(factory_id)
+						for part_id, only_one in pairs(parts) do
+							if only_one ~= 1 then
+								Application:error("[BlackMarketManager] _verify_dlc_items(): something wrong with", primaries, part_id, only_one)
+							end
+							local default_mod
+							local ids_id = Idstring(tweak_data.weapon.factory.parts[part_id].type)
+							for i, d_mod in ipairs(default_blueprint) do
+								if Idstring(tweak_data.weapon.factory.parts[d_mod].type) == ids_id then
+									default_mod = d_mod
+									break
+								end
+							end
+							if default_mod then
+								self:buy_and_modify_weapon("primaries", slot, "normal", default_mod, true)
+							else
+								managers.blackmarket:on_sell_weapon_part("primaries", slot, package_id, part_id)
+							end
+							managers.money:refund_weapon_part(crafted.weapon_id, part_id, package_id)
+						end
+					end
 				end
-			end
-			if is_locked then
-				self:equip_mask(1)
+				for slot, parts in pairs(secondaries) do
+					local crafted = managers.blackmarket:get_crafted_category("secondaries")
+					if not crafted then
+						break
+					end
+					crafted = crafted[slot]
+					if crafted then
+						local factory_id = crafted.factory_id
+						local default_blueprint = managers.weapon_factory:get_default_blueprint_by_factory_id(factory_id)
+						for part_id, only_one in pairs(parts) do
+							if only_one ~= 1 then
+								Application:error("[BlackMarketManager] _verify_dlc_items(): something wrong with", secondaries, part_id, only_one)
+							end
+							local default_mod
+							local ids_id = Idstring(tweak_data.weapon.factory.parts[part_id].type)
+							for i, d_mod in ipairs(default_blueprint) do
+								if Idstring(tweak_data.weapon.factory.parts[d_mod].type) == ids_id then
+									default_mod = d_mod
+									break
+								end
+							end
+							if default_mod then
+								self:buy_and_modify_weapon("secondaries", slot, "normal", default_mod, true)
+							else
+								managers.blackmarket:on_sell_weapon_part("secondaries", slot, package_id, part_id)
+							end
+							managers.money:refund_weapon_part(crafted.weapon_id, part_id, package_id)
+						end
+					end
+				end
+				local mask = managers.blackmarket:equipped_mask()
+				local is_locked = mask.global_value == package_id
+				if not is_locked then
+					for _, part in pairs(mask.blueprint) do
+						print(package_id, inspect(part))
+						is_locked = part.global_value == package_id
+						if is_locked then
+							break
+						end
+					end
+				end
+				if is_locked then
+					self:equip_mask(1)
+				end
 			end
 		end
 	end

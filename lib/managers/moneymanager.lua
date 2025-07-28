@@ -7,10 +7,10 @@ end
 function MoneyManager:_setup()
 	if not Global.money_manager then
 		Global.money_manager = {}
-		Global.money_manager.total = 0
-		Global.money_manager.total_collected = 0
-		Global.money_manager.offshore = 0
-		Global.money_manager.total_spent = 0
+		Global.money_manager.total = Application:digest_value(0, true)
+		Global.money_manager.total_collected = Application:digest_value(0, true)
+		Global.money_manager.offshore = Application:digest_value(0, true)
+		Global.money_manager.total_spent = Application:digest_value(0, true)
 	end
 	self._global = Global.money_manager
 	self._heist_total = 0
@@ -27,7 +27,7 @@ function MoneyManager:_setup()
 end
 
 function MoneyManager:total_string_no_currency()
-	local total = math.round(self._global.total)
+	local total = math.round(self:total())
 	total = tostring(total)
 	local reverse = string.reverse(total)
 	local s = ""
@@ -38,7 +38,7 @@ function MoneyManager:total_string_no_currency()
 end
 
 function MoneyManager:total_string()
-	local total = math.round(self._global.total)
+	local total = math.round(self:total())
 	total = tostring(total)
 	local reverse = string.reverse(total)
 	local s = ""
@@ -49,7 +49,7 @@ function MoneyManager:total_string()
 end
 
 function MoneyManager:total_collected_string_no_currency()
-	local total = math.round(self._global.total_collected)
+	local total = math.round(self:total_collected())
 	total = tostring(total)
 	local reverse = string.reverse(total)
 	local s = ""
@@ -60,7 +60,7 @@ function MoneyManager:total_collected_string_no_currency()
 end
 
 function MoneyManager:total_collected_string()
-	local total = math.round(self._global.total_collected)
+	local total = math.round(self:total_collected())
 	total = tostring(total)
 	local reverse = string.reverse(total)
 	local s = ""
@@ -240,6 +240,12 @@ function MoneyManager:get_real_job_money_values(num_winners)
 	crew_value = total_payout
 	total_payout = math.round(total_payout * (tweak_data.money_manager.alive_humans_multiplier[num_winners] or 1))
 	crew_value = math.round(total_payout - crew_value)
+	total_payout = total_payout + tweak_data.money_manager.flat_stage_completion
+	stage_value = stage_value + tweak_data.money_manager.flat_stage_completion
+	if managers.job:on_last_stage() then
+		total_payout = total_payout + tweak_data.money_manager.flat_job_completion
+		job_value = job_value + tweak_data.money_manager.flat_job_completion
+	end
 	return stage_value, job_value, bag_value, small_value, crew_value, total_payout
 end
 
@@ -330,12 +336,18 @@ function MoneyManager:debug_job_completed(stars)
 	self:_add_to_total(amount)
 end
 
-function MoneyManager:get_job_payout_by_stars(stars)
+function MoneyManager:get_job_payout_by_stars(stars, cap_stars)
+	if cap_stars then
+		stars = math.clamp(stars, 1, #tweak_data.money_manager.stage_completion)
+	end
 	local amount = tweak_data.money_manager.job_completion[stars]
 	return amount
 end
 
-function MoneyManager:get_stage_payout_by_stars(stars)
+function MoneyManager:get_stage_payout_by_stars(stars, cap_stars)
+	if cap_stars then
+		stars = math.clamp(stars, 1, #tweak_data.money_manager.stage_completion)
+	end
 	local amount = tweak_data.money_manager.stage_completion[stars]
 	return amount
 end
@@ -351,23 +363,12 @@ function MoneyManager:get_contract_difficulty_multiplier(stars)
 end
 
 function MoneyManager:get_potential_payout_from_current_stage()
-	if not managers.job:has_active_job() then
-		return 0
-	end
-	local job_and_difficulty_stars = managers.job:current_job_and_difficulty_stars() or 1
-	local job_stars = managers.job:current_job_stars() or 1
-	local difficulty_stars = job_and_difficulty_stars - job_stars
-	local money_multiplier = managers.money:get_contract_difficulty_multiplier(difficulty_stars)
-	local amount = managers.money:get_stage_payout_by_stars(job_stars)
-	if managers.job:on_last_stage() then
-		amount = amount + managers.money:get_job_payout_by_stars(job_stars)
-	end
-	amount = amount + amount * money_multiplier
-	return amount
+	local stage_value, job_value, bag_value, small_value, crew_value, total_payout = self:get_real_job_money_values(0)
+	return stage_value + job_value
 end
 
 function MoneyManager:can_afford_weapon(weapon_id)
-	return self._global.total >= self:get_weapon_price_modified(weapon_id)
+	return self:total() >= self:get_weapon_price_modified(weapon_id)
 end
 
 function MoneyManager:get_weapon_price(weapon_id)
@@ -458,7 +459,7 @@ function MoneyManager:on_sell_weapon_slot(category, slot)
 end
 
 function MoneyManager:can_afford_mission_asset(asset_id)
-	return self._global.total >= self:get_mission_asset_cost_by_id(asset_id)
+	return self:total() >= self:get_mission_asset_cost_by_id(asset_id)
 end
 
 function MoneyManager:on_buy_mission_asset(asset_id)
@@ -468,7 +469,7 @@ function MoneyManager:on_buy_mission_asset(asset_id)
 end
 
 function MoneyManager:can_afford_spend_skillpoint(tree, tier, points)
-	return self._global.total >= self:get_skillpoint_cost(tree, tier, points)
+	return self:total() >= self:get_skillpoint_cost(tree, tier, points)
 end
 
 function MoneyManager:can_afford_respec_skilltree(tree)
@@ -506,7 +507,7 @@ function MoneyManager:get_weapon_modify_price(weapon_id, part_id, global_value)
 end
 
 function MoneyManager:can_afford_weapon_modification(weapon_id, part_id, global_value)
-	return self._global.total >= self:get_weapon_modify_price(weapon_id, part_id, global_value)
+	return self:total() >= self:get_weapon_modify_price(weapon_id, part_id, global_value)
 end
 
 function MoneyManager:on_buy_weapon_modification(weapon_id, part_id, global_value)
@@ -618,7 +619,7 @@ function MoneyManager:get_mask_slot_sell_value(slot)
 end
 
 function MoneyManager:can_afford_mask_crafting(mask_id, global_value, blueprint)
-	return self._global.total >= self:get_mask_crafting_price_modified(mask_id, global_value, blueprint)
+	return self:total() >= self:get_mask_crafting_price_modified(mask_id, global_value, blueprint)
 end
 
 function MoneyManager:on_buy_mask(mask_id, global_value, blueprint)
@@ -684,19 +685,35 @@ function MoneyManager:get_mission_asset_cost_by_id(id)
 end
 
 function MoneyManager:total()
-	return self._global.total
+	return Application:digest_value(self._global.total, false)
+end
+
+function MoneyManager:_set_total(value)
+	self._global.total = Application:digest_value(value, true)
 end
 
 function MoneyManager:total_collected()
-	return self._global.total_collected
+	return Application:digest_value(self._global.total_collected, false)
+end
+
+function MoneyManager:_set_total_collected(value)
+	self._global.total_collected = Application:digest_value(value, true)
 end
 
 function MoneyManager:offshore()
-	return self._global.offshore
+	return Application:digest_value(self._global.offshore, false)
+end
+
+function MoneyManager:_set_offshore(value)
+	self._global.offshore = Application:digest_value(value, true)
 end
 
 function MoneyManager:total_spent()
-	return self._global.total_spent
+	return Application:digest_value(self._global.total_spent, false)
+end
+
+function MoneyManager:_set_total_spent(value)
+	self._global.total_spent = Application:digest_value(value, true)
 end
 
 function MoneyManager:add_to_total(amount)
@@ -711,9 +728,9 @@ function MoneyManager:_add_to_total(amount, params)
 	local spending_cash = math.round(no_offshore and amount or amount * tweak_data.money_manager.offshore_rate)
 	local rounding_error = math.round(amount - (offshore + spending_cash))
 	spending_cash = spending_cash + rounding_error
-	self._global.total = self._global.total + spending_cash
-	self._global.total_collected = self._global.total_collected + math.round(amount)
-	self._global.offshore = self._global.offshore + offshore
+	self:_set_total(self:total() + spending_cash)
+	self:_set_total_collected(self:total_collected() + math.round(amount))
+	self:_set_offshore(self:offshore() + offshore)
 	self:_on_total_changed(amount, spending_cash, offshore)
 end
 
@@ -724,23 +741,23 @@ function MoneyManager:deduct_from_total(amount)
 end
 
 function MoneyManager:_deduct_from_total(amount)
-	amount = math.min(amount, self._global.total)
-	self._global.total = math.max(0, self._global.total - amount)
-	self._global.total_spent = self._global.total_spent + amount
+	amount = math.min(amount, self:total())
+	self:_set_total(math.max(0, self:total() - amount))
+	self:_set_total_spent(self:total_spent() + amount)
 	self:_on_total_changed(-amount, -amount, 0)
 end
 
 function MoneyManager:_on_total_changed(amount, spending_cash, offshore)
-	Application:debug("MoneyManager:_on_total_changed:", "amount", amount, "total", self._global.total)
+	Application:debug("MoneyManager:_on_total_changed:", "amount", amount, "total", self:total())
 	self._heist_total = self._heist_total + amount
 	self._heist_offshore = self._heist_offshore + offshore
 	if offshore and 0 < offshore then
 		self._heist_spending = self._heist_spending + spending_cash
 	end
-	if self._global.total >= tweak_data.achievement.going_places then
+	if self:total() >= tweak_data.achievement.going_places then
 		managers.achievment:award("going_places")
 	end
-	if self._global.total_spent >= tweak_data.achievement.spend_money_to_make_money then
+	if self:total_spent() >= tweak_data.achievement.spend_money_to_make_money then
 		managers.achievment:award("spend_money_to_make_money")
 	end
 end
@@ -845,7 +862,7 @@ end
 function MoneyManager:load(data)
 	local state = data.MoneyManager
 	self._global.total = state.total
-	self._global.total_collected = state.total_collected or 0
-	self._global.offshore = state.offshore or 0
-	self._global.total_spent = state.total_spent or 0
+	self._global.total_collected = state.total_collected or Application:digest_value(0, true)
+	self._global.offshore = state.offshore or Application:digest_value(0, true)
+	self._global.total_spent = state.total_spent or Application:digest_value(0, true)
 end

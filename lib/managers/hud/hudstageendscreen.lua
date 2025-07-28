@@ -699,6 +699,8 @@ function HUDStageEndScreen:clear_stage()
 	WalletGuiObject.set_object_visible("wallet_level_text", false)
 	WalletGuiObject.set_object_visible("wallet_money_icon", false)
 	WalletGuiObject.set_object_visible("wallet_money_text", false)
+	WalletGuiObject.set_object_visible("wallet_skillpoint_icon", false)
+	WalletGuiObject.set_object_visible("wallet_skillpoint_text", false)
 end
 
 function HUDStageEndScreen:stop_stage()
@@ -733,14 +735,18 @@ function HUDStageEndScreen:_wait_for_video()
 	local length = video:length()
 	local fade_t = 1
 	local alpha = 0
-	while video:loop_count() == 0 do
+	while alive(video) and video:loop_count() == 0 do
 		local dt = coroutine.yield()
 		time = time + dt
 		video:set_alpha(math.min(time, 1) * 0.2)
 	end
 	if alive(video) then
-		video:stop()
-		video:animate(callback(self, self, "destroy_animation"), nil, 4)
+		local start_alpha = video:alpha()
+		over(0.25, function(p)
+			video:set_alpha(math.lerp(start_alpha, 0, p))
+		end)
+		video:parent():remove(video)
+		video = nil
 	end
 end
 
@@ -1057,7 +1063,6 @@ function HUDStageEndScreen:stage_init(t, dt)
 	end
 	local bonuses_to_string_converter = {
 		"bonus_risk",
-		"bonus_low_level",
 		"bonus_failed",
 		"bonus_days",
 		"bonus_num_players",
@@ -1264,6 +1269,8 @@ function HUDStageEndScreen:stage_done(t, dt)
 		WalletGuiObject.refresh()
 		WalletGuiObject.set_object_visible("wallet_level_icon", true)
 		WalletGuiObject.set_object_visible("wallet_level_text", true)
+		WalletGuiObject.set_object_visible("wallet_skillpoint_icon", managers.skilltree:points() > 0)
+		WalletGuiObject.set_object_visible("wallet_skillpoint_text", managers.skilltree:points() > 0)
 		self._done_clbk(true)
 		self._all_done = true
 	end

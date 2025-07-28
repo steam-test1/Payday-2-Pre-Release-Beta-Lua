@@ -457,7 +457,7 @@ function CopLogicIdle.on_intimidated(data, amount, aggressor_unit)
 	local surrender = false
 	local my_data = data.internal_data
 	data.t = TimerManager:game():time()
-	if managers.groupai:state():police_hostage_count() < 4 then
+	if managers.groupai:state():police_hostage_count() < 1 then
 		local i_am_special = managers.groupai:state():is_enemy_special(data.unit)
 		local required_skill = i_am_special and "intimidate_specials" or "intimidate_enemies"
 		local aggressor_can_intimidate
@@ -474,15 +474,10 @@ function CopLogicIdle.on_intimidated(data, amount, aggressor_unit)
 			if hold_chance then
 				hold_chance = hold_chance ^ aggressor_intimidation_mul
 				if 1 <= hold_chance then
-					if not data.unit:sound():speaking(data.t) then
-						data.unit:sound():say("Play_po1_r02", true, true)
-					end
 				else
 					local rand_nr = math.random()
 					if hold_chance < rand_nr then
 						surrender = true
-					elseif hold_chance < 0.9 and not data.unit:sound():speaking(data.t + 1) then
-						data.unit:sound():say("Play_po1_r03", true, true)
 					end
 				end
 			end
@@ -1008,7 +1003,7 @@ function CopLogicIdle._upd_curious_reaction(data)
 	end
 	
 	local turned_around
-	if not attention_obj.settings.turn_around_range or dis < attention_obj.settings.turn_around_range then
+	if (not attention_obj.settings.turn_around_range or dis < attention_obj.settings.turn_around_range) and (not data.objective or not data.objective.rot) then
 		local suspect_spin = _get_spin_to_att_obj()
 		if turn_spin < suspect_spin then
 			CopLogicIdle._turn_by_spin(data, my_data, suspect_spin)

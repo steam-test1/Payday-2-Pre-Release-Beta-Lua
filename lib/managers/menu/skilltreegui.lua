@@ -712,8 +712,6 @@ function SkillTreeGui:_setup()
 		vertical = "top"
 	})
 	points_text:set_left(self._panel:w() * WIDTH_MULTIPLIER * 2 / 3 + 10)
-	WalletGuiObject.set_object_visible("wallet_skillpoint_icon", managers.skilltree:points() > 0)
-	WalletGuiObject.set_object_visible("wallet_skillpoint_text", managers.skilltree:points() > 0)
 	if managers.menu:is_pc_controller() then
 		self._panel:text({
 			name = "back_button",

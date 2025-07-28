@@ -178,18 +178,6 @@ function HUDLootScreen:create_peer(peers_panel, peer_id)
 	global_value_text:set_y(main_text:bottom())
 	card_info_panel:set_h(main_text:bottom())
 	card_info_panel:set_center_y(panel:h() * 0.5)
-	local card_nums = {
-		"joker",
-		"two",
-		"three",
-		"four",
-		"five",
-		"six",
-		"seven",
-		"eight",
-		"nine",
-		"ace"
-	}
 	local total_cards_w = panel:w() - peer_info_panel:w() - card_info_panel:w() - 10
 	local card_w = math.round((total_cards_w - 10) / 3)
 	for i = 1, 3 do
@@ -599,7 +587,7 @@ function HUDLootScreen:texture_loaded_clbk(params, texture_idstring)
 end
 
 function HUDLootScreen:begin_choose_card(peer_id, card_id)
-	print("YOU CHOOSED " .. card_id .. "MR. " .. peer_id)
+	print("YOU CHOOSED " .. card_id .. ", mr." .. peer_id)
 	local panel = self._peers_panel:child("peer" .. tostring(peer_id))
 	panel:stop()
 	panel:set_alpha(1)
@@ -610,6 +598,7 @@ function HUDLootScreen:begin_choose_card(peer_id, card_id)
 	local _, _, _, hh = main_text:text_rect()
 	main_text:set_h(hh + 2)
 	local lootdrop_data = self._peer_data[peer_id].lootdrops
+	local item_category = lootdrop_data[3]
 	local item_pc = lootdrop_data[6]
 	local left_pc = lootdrop_data[7]
 	local right_pc = lootdrop_data[8]
@@ -621,8 +610,16 @@ function HUDLootScreen:begin_choose_card(peer_id, card_id)
 	local card_three = #cards + 1
 	cards[card_three] = right_pc
 	if item_pc == 0 then
-		self._peer_data[peer_id].joker = true
+		self._peer_data[peer_id].joker = 0 < tweak_data.lootdrop.joker_chance
 	end
+	local type_to_card = {
+		weapon_mods = 1,
+		cash = 9,
+		masks = 10,
+		materials = 10,
+		colors = 10,
+		textures = 10
+	}
 	local card_nums = {
 		"one",
 		"two",
@@ -636,10 +633,15 @@ function HUDLootScreen:begin_choose_card(peer_id, card_id)
 		"ace"
 	}
 	for i, pc in ipairs(cards) do
+		local my_card = i == card_id
 		local card_panel = panel:child("card" .. i)
 		local downcard = card_panel:child("downcard")
-		local joker = pc == 0
-		local texture, rect, coords = tweak_data.hud_icons:get_icon_data(joker and "joker_of_spade" or card_nums[pc] .. "_of_spade")
+		local joker = pc == 0 and 0 < tweak_data.lootdrop.joker_chance
+		local card_i = my_card and type_to_card[item_category] or math.max(pc, 1)
+		if not my_card and card_i ~= 10 and math.rand(1) < tweak_data.lootdrop.WEIGHTED_TYPE_CHANCE[card_i * 10].cash then
+			card_i = 9
+		end
+		local texture, rect, coords = tweak_data.hud_icons:get_icon_data(joker and "joker_of_spade" or card_nums[card_i] .. "_of_spade")
 		local upcard = card_panel:bitmap({
 			name = "upcard",
 			texture = texture,

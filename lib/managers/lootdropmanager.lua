@@ -64,6 +64,7 @@ function LootDropManager:debug_drop(amount, add_to_inventory, stars)
 	if stars ~= "random" then
 		Application:debug(debug_max_pc .. " dropped at PC " .. stars, "infamous items dropped: " .. debug_infamous)
 	end
+	Global.debug_drop_result = self._debug_drop_result
 end
 
 function LootDropManager:make_drop(return_data)
@@ -120,10 +121,6 @@ function LootDropManager:_make_drop(debug, add_to_inventory, debug_stars, return
 	local start_chance = tweak_data.lootdrop.PC_CHANCE[stars]
 	if not debug then
 		print("start_chance before skills: ", start_chance)
-	end
-	start_chance = start_chance * managers.player:upgrade_value("player", "passive_loot_drop_multiplier", 1) * managers.player:upgrade_value("player", "loot_drop_multiplier", 1)
-	if not debug then
-		print("start_chance after skills: ", start_chance)
 	end
 	local no_pcs = #pcs
 	local pc
@@ -182,10 +179,11 @@ function LootDropManager:_make_drop(debug, add_to_inventory, debug_stars, return
 		local global_value = "normal"
 		if not tweak_data.blackmarket[type_items][item_entry].qlvl or plvl >= tweak_data.blackmarket[type_items][item_entry].qlvl then
 			local global_value_chance = math.rand(1)
-			if tweak_data.blackmarket[type_items][item_entry].infamous and global_value_chance < tweak_data.lootdrop.global_values.infamous.chance then
+			local quality_mul = managers.player:upgrade_value("player", "passive_loot_drop_multiplier", 1) * managers.player:upgrade_value("player", "loot_drop_multiplier", 1)
+			if tweak_data.blackmarket[type_items][item_entry].infamous and global_value_chance < tweak_data.lootdrop.global_values.infamous.chance * quality_mul then
 				global_value = "infamous"
-			elseif global_value_chance < tweak_data.lootdrop.global_values.exceptional.chance then
-			elseif global_value_chance < tweak_data.lootdrop.global_values.superior.chance then
+			elseif global_value_chance < tweak_data.lootdrop.global_values.exceptional.chance * quality_mul then
+			elseif global_value_chance < tweak_data.lootdrop.global_values.superior.chance * quality_mul then
 			end
 			if not tweak_data.blackmarket[type_items][item_entry].infamous or global_value == "infamous" then
 				has_result = true

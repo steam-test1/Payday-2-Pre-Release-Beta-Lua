@@ -201,6 +201,16 @@ function ConnectionNetworkHandler:set_peer_left(peer_id, sender)
 	managers.network:session():on_peer_left(peer, peer_id)
 end
 
+function ConnectionNetworkHandler:set_menu_sync_state_index(index, sender)
+	local peer = self._verify_sender(sender)
+	if not peer then
+		return
+	end
+	if managers.menu then
+		managers.menu:set_peer_sync_state_index(peer:id(), index)
+	end
+end
+
 function ConnectionNetworkHandler:enter_ingame_lobby_menu(sender)
 	if not self._verify_sender(sender) then
 		return

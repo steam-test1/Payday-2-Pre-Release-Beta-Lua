@@ -49,7 +49,6 @@ function MenuItemKitSlot:next()
 		return
 	end
 	local peer_id = managers.network:session():local_peer():id()
-	managers.network:session():send_to_peers_synched("set_kit_selection", peer_id, self._parameters.category, self._options[self._current_index], self._parameters.slot)
 	managers.menu:get_menu("kit_menu").renderer:set_kit_selection(peer_id, self._parameters.category, self._options[self._current_index], self._parameters.slot)
 	return true
 end
@@ -75,7 +74,6 @@ function MenuItemKitSlot:previous()
 		return
 	end
 	local peer_id = managers.network:session():local_peer():id()
-	managers.network:session():send_to_peers_synched("set_kit_selection", peer_id, self._parameters.category, self._options[self._current_index], self._parameters.slot)
 	managers.menu:get_menu("kit_menu").renderer:set_kit_selection(peer_id, self._parameters.category, self._options[self._current_index], self._parameters.slot)
 	return true
 end

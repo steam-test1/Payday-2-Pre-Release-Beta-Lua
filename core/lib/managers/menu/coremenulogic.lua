@@ -15,6 +15,7 @@ function Logic:init(menu_data)
 	self._callback_map.renderer_node_item_dirty = nil
 	self._callback_map.input_accept_input = nil
 	self._callback_map.menu_manager_menu_closed = nil
+	self._callback_map.menu_manager_select_node = nil
 	self._action_queue = {}
 	self._action_callback_map = {}
 	self._action_callback_map.select_node = callback(self, self, "_select_node")
@@ -78,6 +79,7 @@ function Logic:_select_node(node_name, ...)
 		self:_call_callback("renderer_show_node", node)
 		node:select_item()
 		self:_call_callback("renderer_select_item", node:selected_item())
+		self:_call_callback("menu_manager_select_node", node)
 	end
 end
 
@@ -137,7 +139,7 @@ function Logic:_navigate_back(skip_nodes)
 			table.remove(self._node_stack, #self._node_stack)
 			self:_call_callback("renderer_navigate_back")
 		end
-		local node = self._node_stack[#self._node_stack]
+		node = self._node_stack[#self._node_stack]
 		if node then
 			node:trigger_focus_changed(true)
 			if node:parameters().menu_components then
@@ -145,12 +147,16 @@ function Logic:_navigate_back(skip_nodes)
 			end
 		end
 	end
+	self:_call_callback("menu_manager_select_node", node)
 end
 
 function Logic:soft_open()
 	local node = self._node_stack[#self._node_stack]
-	if node and node:parameters().menu_components then
-		managers.menu_component:set_active_components(node:parameters().menu_components, node)
+	if node then
+		if node:parameters().menu_components then
+			managers.menu_component:set_active_components(node:parameters().menu_components, node)
+		end
+		self:_call_callback("menu_manager_select_node", node)
 	end
 end
 
@@ -261,4 +267,5 @@ function Logic:close(closing_menu)
 		end
 	end
 	self._node_stack = {}
+	self:_call_callback("menu_manager_select_node", false)
 end

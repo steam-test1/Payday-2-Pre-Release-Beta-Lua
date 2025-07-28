@@ -793,18 +793,10 @@ function WeaponTweakData:_init_stats()
 		1.5,
 		1.5
 	}
-	self.stats.extra_ammo = {
-		0,
-		2,
-		4,
-		6,
-		8,
-		10,
-		12,
-		14,
-		16,
-		18
-	}
+	self.stats.extra_ammo = {}
+	for i = -10, 50, 2 do
+		table.insert(self.stats.extra_ammo, i)
+	end
 end
 
 function WeaponTweakData:_pickup_chance(max_ammo, selection_index)
@@ -891,7 +883,7 @@ function WeaponTweakData:_init_new_weapons(autohit_rifle_default, autohit_pistol
 		zoom = 3,
 		concealment = 24,
 		suppression = 7,
-		extra_ammo = 1,
+		extra_ammo = 6,
 		value = 1
 	}
 	self.glock_17 = {}
@@ -973,7 +965,7 @@ function WeaponTweakData:_init_new_weapons(autohit_rifle_default, autohit_pistol
 		zoom = 1,
 		concealment = 30,
 		suppression = 7,
-		extra_ammo = 1,
+		extra_ammo = 6,
 		value = 1
 	}
 	self.mp9 = {}
@@ -1055,7 +1047,7 @@ function WeaponTweakData:_init_new_weapons(autohit_rifle_default, autohit_pistol
 		zoom = 3,
 		concealment = 27,
 		suppression = 7,
-		extra_ammo = 1,
+		extra_ammo = 6,
 		value = 1
 	}
 	self.r870 = {}
@@ -1142,7 +1134,7 @@ function WeaponTweakData:_init_new_weapons(autohit_rifle_default, autohit_pistol
 		zoom = 3,
 		concealment = 21,
 		suppression = 7,
-		extra_ammo = 1,
+		extra_ammo = 6,
 		value = 1
 	}
 	self.glock_18c = {}
@@ -1226,7 +1218,7 @@ function WeaponTweakData:_init_new_weapons(autohit_rifle_default, autohit_pistol
 		zoom = 1,
 		concealment = 30,
 		suppression = 7,
-		extra_ammo = 1,
+		extra_ammo = 6,
 		value = 1
 	}
 	self.amcar = {}
@@ -1304,7 +1296,7 @@ function WeaponTweakData:_init_new_weapons(autohit_rifle_default, autohit_pistol
 		zoom = 3,
 		concealment = 24,
 		suppression = 7,
-		extra_ammo = 1,
+		extra_ammo = 6,
 		value = 1
 	}
 	self.m16 = {}
@@ -1382,7 +1374,7 @@ function WeaponTweakData:_init_new_weapons(autohit_rifle_default, autohit_pistol
 		zoom = 4,
 		concealment = 21,
 		suppression = 7,
-		extra_ammo = 1,
+		extra_ammo = 6,
 		value = 1
 	}
 	self.olympic = {}
@@ -1460,7 +1452,7 @@ function WeaponTweakData:_init_new_weapons(autohit_rifle_default, autohit_pistol
 		zoom = 3,
 		concealment = 27,
 		suppression = 7,
-		extra_ammo = 1,
+		extra_ammo = 6,
 		value = 1
 	}
 	self.ak74 = {}
@@ -1538,7 +1530,7 @@ function WeaponTweakData:_init_new_weapons(autohit_rifle_default, autohit_pistol
 		zoom = 3,
 		concealment = 18,
 		suppression = 7,
-		extra_ammo = 1,
+		extra_ammo = 6,
 		value = 1
 	}
 	self.akm = {}
@@ -1616,7 +1608,7 @@ function WeaponTweakData:_init_new_weapons(autohit_rifle_default, autohit_pistol
 		zoom = 3,
 		concealment = 18,
 		suppression = 7,
-		extra_ammo = 1,
+		extra_ammo = 6,
 		value = 1
 	}
 	self.akmsu = {}
@@ -1694,7 +1686,7 @@ function WeaponTweakData:_init_new_weapons(autohit_rifle_default, autohit_pistol
 		zoom = 3,
 		concealment = 24,
 		suppression = 7,
-		extra_ammo = 1,
+		extra_ammo = 6,
 		value = 1
 	}
 	self.saiga = {}
@@ -1774,7 +1766,7 @@ function WeaponTweakData:_init_new_weapons(autohit_rifle_default, autohit_pistol
 		zoom = 3,
 		concealment = 18,
 		suppression = 7,
-		extra_ammo = 1,
+		extra_ammo = 6,
 		value = 1
 	}
 	self.ak5 = {}
@@ -1852,7 +1844,7 @@ function WeaponTweakData:_init_new_weapons(autohit_rifle_default, autohit_pistol
 		zoom = 3,
 		concealment = 21,
 		suppression = 7,
-		extra_ammo = 1,
+		extra_ammo = 6,
 		value = 1
 	}
 	self.aug = {}
@@ -1927,7 +1919,7 @@ function WeaponTweakData:_init_new_weapons(autohit_rifle_default, autohit_pistol
 		zoom = 3,
 		concealment = 24,
 		suppression = 7,
-		extra_ammo = 1,
+		extra_ammo = 6,
 		value = 1
 	}
 	self.g36 = {}
@@ -2002,7 +1994,7 @@ function WeaponTweakData:_init_new_weapons(autohit_rifle_default, autohit_pistol
 		zoom = 3,
 		concealment = 21,
 		suppression = 7,
-		extra_ammo = 1,
+		extra_ammo = 6,
 		value = 1
 	}
 	self.p90 = {}
@@ -2077,7 +2069,7 @@ function WeaponTweakData:_init_new_weapons(autohit_rifle_default, autohit_pistol
 		zoom = 3,
 		concealment = 24,
 		suppression = 7,
-		extra_ammo = 1,
+		extra_ammo = 6,
 		value = 1
 	}
 	self.new_m14 = {}
@@ -2151,7 +2143,7 @@ function WeaponTweakData:_init_new_weapons(autohit_rifle_default, autohit_pistol
 		zoom = 3,
 		concealment = 18,
 		suppression = 7,
-		extra_ammo = 1,
+		extra_ammo = 6,
 		value = 1
 	}
 	self.deagle = {}
@@ -2225,7 +2217,7 @@ function WeaponTweakData:_init_new_weapons(autohit_rifle_default, autohit_pistol
 		zoom = 3,
 		concealment = 27,
 		suppression = 7,
-		extra_ammo = 1,
+		extra_ammo = 6,
 		value = 1
 	}
 	self.new_mp5 = {}
@@ -2302,7 +2294,7 @@ function WeaponTweakData:_init_new_weapons(autohit_rifle_default, autohit_pistol
 		zoom = 3,
 		concealment = 24,
 		suppression = 7,
-		extra_ammo = 1,
+		extra_ammo = 6,
 		value = 1
 	}
 	self.colt_1911 = {}
@@ -2379,7 +2371,7 @@ function WeaponTweakData:_init_new_weapons(autohit_rifle_default, autohit_pistol
 		zoom = 3,
 		concealment = 30,
 		suppression = 7,
-		extra_ammo = 1,
+		extra_ammo = 6,
 		value = 1
 	}
 	self.mac10 = {}
@@ -2456,7 +2448,7 @@ function WeaponTweakData:_init_new_weapons(autohit_rifle_default, autohit_pistol
 		zoom = 3,
 		concealment = 27,
 		suppression = 7,
-		extra_ammo = 1,
+		extra_ammo = 6,
 		value = 1
 	}
 	self.serbu = {}
@@ -2533,7 +2525,7 @@ function WeaponTweakData:_init_new_weapons(autohit_rifle_default, autohit_pistol
 		zoom = 3,
 		concealment = 24,
 		suppression = 7,
-		extra_ammo = 1,
+		extra_ammo = 6,
 		value = 1
 	}
 	self.huntsman = {}
@@ -2626,7 +2618,7 @@ function WeaponTweakData:_init_new_weapons(autohit_rifle_default, autohit_pistol
 		zoom = 3,
 		concealment = 21,
 		suppression = 7,
-		extra_ammo = 1,
+		extra_ammo = 6,
 		value = 1
 	}
 	self.b92fs = {}
@@ -2702,7 +2694,7 @@ function WeaponTweakData:_init_new_weapons(autohit_rifle_default, autohit_pistol
 		zoom = 3,
 		concealment = 30,
 		suppression = 7,
-		extra_ammo = 1,
+		extra_ammo = 6,
 		value = 1
 	}
 	self.new_raging_bull = {}
@@ -2782,7 +2774,7 @@ function WeaponTweakData:_init_new_weapons(autohit_rifle_default, autohit_pistol
 		zoom = 3,
 		concealment = 27,
 		suppression = 7,
-		extra_ammo = 1,
+		extra_ammo = 6,
 		value = 1
 	}
 	self.saw = {}
@@ -2879,7 +2871,7 @@ function WeaponTweakData:_init_new_weapons(autohit_rifle_default, autohit_pistol
 		damage = 10,
 		concealment = 18,
 		value = 1,
-		extra_ammo = 1
+		extra_ammo = 6
 	}
 	self.saw.hit_alert_size_increase = 4
 end

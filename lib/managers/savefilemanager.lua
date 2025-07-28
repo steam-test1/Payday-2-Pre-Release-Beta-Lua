@@ -651,17 +651,23 @@ function SavefileManager:_load_callback(save_data)
 	local cache
 	cat_print("savefile_manager", "[SavefileManager] Load of slot \"" .. tostring(slot) .. "\" done with status \"" .. tostring(SaveData.status_to_string(status)) .. "\" (" .. tostring(status) .. ").")
 	local wrong_user = status == SaveData.WRONG_USER
+	local wrong_version = status == SaveData.WRONG_VERSION
 	if status == SaveData.OK or wrong_user then
 		cache = save_data:information()
+	end
+	if cache and SystemInfo:platform() == Idstring("WIN32") and cache.version ~= SavefileManager.VERSION then
+		cache = nil
+		wrong_version = true
 	end
 	if cache and SystemInfo:platform() == Idstring("WIN32") and cache.user_id ~= (self._USER_ID_OVERRRIDE or Steam:userid()) then
 		print("[SavefileManager:_load_callback] User ID missmatch. cache.user_id:", cache.user_id, ". expected user id:", self._USER_ID_OVERRRIDE or Steam:userid())
 		cache = nil
+		wrong_user = true
 	end
 	self._save_sizes = self._save_sizes or {}
 	table.insert(self._save_sizes, size)
 	self:_set_cache(slot, cache)
-	self:_load_done(slot, false, wrong_user)
+	self:_load_done(slot, false, wrong_user, wrong_version)
 end
 
 function SavefileManager:_load_platform_setting_map_callback(platform_setting_map)
@@ -673,7 +679,7 @@ function SavefileManager:_load_platform_setting_map_callback(platform_setting_ma
 	self:_load_done(self.SETTING_SLOT, false)
 end
 
-function SavefileManager:_load_done(slot, cache_only, wrong_user)
+function SavefileManager:_load_done(slot, cache_only, wrong_user, wrong_version)
 	local is_setting_slot = slot == self.SETTING_SLOT
 	local is_progress_slot = slot == self.PROGRESS_SLOT
 	local meta_data = self:_meta_data(slot)
@@ -694,7 +700,17 @@ function SavefileManager:_load_done(slot, cache_only, wrong_user)
 	local req_version = self:_load_cache(slot)
 	success = req_version == nil and success or false
 	self._load_done_callback_handler:dispatch(slot, success, is_setting_slot, cache_only)
-	if not success then
+	if not success and wrong_version then
+		self._loading_save_games[slot] = nil
+		local error_msg = is_setting_slot and "dialog_fail_load_setting_wrong_version" or "dialog_fail_load_progress_wrong_version"
+		managers.menu:show_savefile_wrong_version({error_msg = error_msg})
+	elseif not success and wrong_user then
+		self._loading_save_games[slot] = nil
+		if not self._queued_wrong_user then
+			self._queued_wrong_user = true
+			managers.menu:show_savefile_wrong_user()
+		end
+	elseif not success then
 		self._try_again = self._try_again or {}
 		local dialog_data = {}
 		dialog_data.title = managers.localization:text("dialog_error_title")

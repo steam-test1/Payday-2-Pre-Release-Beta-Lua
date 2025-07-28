@@ -281,6 +281,9 @@ end
 
 function UnitNetworkHandler:run_mission_element(id, unit)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
+		if self._verify_gamestate(self._gamestate_filter.any_end_game) then
+			managers.mission:client_run_mission_element_end_screen(id, unit)
+		end
 		return
 	end
 	managers.mission:client_run_mission_element(id, unit)
@@ -288,6 +291,9 @@ end
 
 function UnitNetworkHandler:run_mission_element_no_instigator(id)
 	if not self._verify_gamestate(self._gamestate_filter.any_ingame) then
+		if self._verify_gamestate(self._gamestate_filter.any_end_game) then
+			managers.mission:client_run_mission_element_end_screen(id)
+		end
 		return
 	end
 	managers.mission:client_run_mission_element(id)
@@ -1151,7 +1157,6 @@ function UnitNetworkHandler:corpse_sound_play(unit_id, event_id, source)
 		return
 	end
 	if not u_data.unit:sound() then
-		debug_pause("[UnitNetworkHandler:corpse_sound_play] unit without sound extension", u_data.unit)
 		return
 	end
 	u_data.unit:sound():play(event_id, source, false)

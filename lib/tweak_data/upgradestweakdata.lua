@@ -50,6 +50,7 @@ function UpgradesTweakData:_init_pd2_values()
 	self.values.player.civ_calming_alerts = {true}
 	self.values.player.civ_intimidation_mul = {10}
 	self.values.team.pistol.recoil_multiplier = {0.75}
+	self.values.team.weapon.recoil_multiplier = {0.5}
 	self.values.player.assets_cost_multiplier = {0.5}
 	self.values.player.additional_assets = {true}
 	self.values.player.stamina_multiplier = {2}
@@ -65,7 +66,7 @@ function UpgradesTweakData:_init_pd2_values()
 	self.values.doctor_bag.amount_increase = {2}
 	self.values.player.convert_enemies = {true}
 	self.values.player.convert_enemies_max_minions = {1, 2}
-	self.values.player.convert_enemies_health_multiplier = {0.1}
+	self.values.player.convert_enemies_health_multiplier = {0.4}
 	self.values.player.convert_enemies_damage_multiplier = {4.5}
 	self.values.player.xp_multiplier = {1.1}
 	self.values.team.xp.multiplier = {1.1}
@@ -82,7 +83,7 @@ function UpgradesTweakData:_init_pd2_values()
 	self.values.doctor_bag.interaction_speed_multiplier = {0.8}
 	self.values.team.stamina.passive_multiplier = {1.15, 1.3}
 	self.values.player.passive_intimidate_range_mul = {1.25}
-	self.values.player.passive_convert_enemies_health_multiplier = {0.5}
+	self.values.player.passive_convert_enemies_health_multiplier = {0.25}
 	self.values.player.passive_convert_enemies_damage_multiplier = {1.05}
 	self.values.player.convert_enemies_interaction_speed_multiplier = {0.33}
 	self.values.player.empowered_intimidation_mul = {3}
@@ -140,7 +141,7 @@ function UpgradesTweakData:_init_pd2_values()
 	}
 	self.values.weapon.passive_damage_multiplier = {1.05}
 	self.values.assault_rifle.enter_steelsight_speed_multiplier = {2}
-	self.values.assault_rifle.zoom_increase = {1}
+	self.values.assault_rifle.zoom_increase = {2}
 	self.values.player.crafting_weapon_multiplier = {0.9}
 	self.values.player.crafting_mask_multiplier = {0.9}
 	self.values.trip_mine.quantity_1 = {1}
@@ -237,7 +238,8 @@ function UpgradesTweakData:init()
 	self.level_tree[1] = {
 		name_id = "body_armor",
 		upgrades = {
-			"body_armor2"
+			"body_armor2",
+			"ak74"
 		}
 	}
 	self.level_tree[2] = {
@@ -246,7 +248,7 @@ function UpgradesTweakData:init()
 	}
 	self.level_tree[4] = {
 		name_id = "Angst",
-		upgrades = {"new_m4", "ak74"}
+		upgrades = {"new_m4"}
 	}
 	self.level_tree[6] = {
 		name_id = "Angst",
@@ -656,7 +658,6 @@ function UpgradesTweakData:_init_values()
 	self.values.team.pistol = self.values.team.pistol or {}
 	self.values.team.weapon = self.values.team.weapon or {}
 	self.values.team.weapon.suppression_recoil_multiplier = {0.75}
-	self.values.team.weapon.recoil_multiplier = {0.75}
 	self.values.team.xp = self.values.team.xp or {}
 	self.values.team.armor = self.values.team.armor or {}
 	self.values.team.stamina = self.values.team.stamina or {}

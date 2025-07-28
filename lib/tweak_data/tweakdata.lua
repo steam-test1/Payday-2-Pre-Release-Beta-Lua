@@ -138,6 +138,21 @@ function TweakData:index_to_server_state(index)
 	return self.server_states[index]
 end
 
+function TweakData:menu_sync_state_to_index(state)
+	if not state then
+		return false
+	end
+	for i, menu_sync in ipairs(self.menu_sync_states) do
+		if menu_sync == state then
+			return i
+		end
+	end
+end
+
+function TweakData:index_to_menu_sync_state(index)
+	return self.menu_sync_states[index]
+end
+
 function TweakData:init()
 	self.hud_icons = HudIconsTweakData:new()
 	self.weapon = WeaponTweakData:new()
@@ -191,6 +206,15 @@ function TweakData:init()
 		"in_lobby",
 		"loading",
 		"in_game"
+	}
+	self.menu_sync_states = {
+		"crimenet",
+		"skilltree",
+		"options",
+		"lobby",
+		"blackmarket",
+		"blackmarket_weapon",
+		"blackmarket_mask"
 	}
 	self.difficulty_name_ids = {}
 	self.difficulty_name_ids.easy = "menu_difficulty_easy"
@@ -1958,14 +1982,14 @@ function TweakData:init()
 	self.experience_manager.level_limit.pc_difference_multipliers = {
 		1,
 		0.9,
+		0.72,
 		0.504,
 		0.3024,
 		0.1512,
 		0.06048,
 		0.018144,
 		0.0036288,
-		3.6288E-4,
-		0
+		3.6288E-4
 	}
 	self.experience_manager.civilians_killed = 0
 	self.experience_manager.day_multiplier = {

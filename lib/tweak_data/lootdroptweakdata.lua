@@ -6,7 +6,7 @@ function LootDropTweakData:init(tweak_data)
 	self.no_drop.BASE = 35
 	self.no_drop.HUMAN_STEP_MODIFIER = 10
 	self.joker_chance = 0
-	self.level_limit = 10
+	self.level_limit = 1
 	self.risk_pc_multiplier = {
 		0,
 		0,
@@ -14,16 +14,16 @@ function LootDropTweakData:init(tweak_data)
 		0
 	}
 	self.PC_CHANCE = {}
-	self.PC_CHANCE[1] = 0.5
-	self.PC_CHANCE[2] = 0.5
-	self.PC_CHANCE[3] = 0.5
-	self.PC_CHANCE[4] = 0.5
-	self.PC_CHANCE[5] = 0.5
-	self.PC_CHANCE[6] = 0.5
-	self.PC_CHANCE[7] = 0.5
-	self.PC_CHANCE[8] = 0.5
-	self.PC_CHANCE[9] = 0.5
-	self.PC_CHANCE[10] = 0.5
+	self.PC_CHANCE[1] = 0.75
+	self.PC_CHANCE[2] = 0.75
+	self.PC_CHANCE[3] = 0.75
+	self.PC_CHANCE[4] = 0.75
+	self.PC_CHANCE[5] = 0.75
+	self.PC_CHANCE[6] = 0.75
+	self.PC_CHANCE[7] = 0.75
+	self.PC_CHANCE[8] = 0.75
+	self.PC_CHANCE[9] = 0.75
+	self.PC_CHANCE[10] = 0.75
 	self.STARS = {}
 	self.STARS[1] = {
 		pcs = {
@@ -111,8 +111,8 @@ function LootDropTweakData:init(tweak_data)
 	local min = 10
 	local max = 100
 	local range = {
-		cash = {0.1, 0.1},
-		weapon_mods = {1, 1},
+		cash = {1, 1},
+		weapon_mods = {2, 2},
 		colors = {0.8, 0.8},
 		textures = {0.9, 0.9},
 		materials = {1, 1},
@@ -169,7 +169,7 @@ function LootDropTweakData:init(tweak_data)
 	self.global_values.infamous.name_id = "bm_global_value_infamous"
 	self.global_values.infamous.color = Color(1, 0.1, 1)
 	self.global_values.infamous.dlc = false
-	self.global_values.infamous.chance = 0.1
+	self.global_values.infamous.chance = 0.05
 	self.global_values.infamous.value_multiplier = tweak_data.money_manager.global_value_multipliers.infamous
 	self.global_values.infamous.durability_multiplier = 3
 	self.global_values.infamous.drops = true

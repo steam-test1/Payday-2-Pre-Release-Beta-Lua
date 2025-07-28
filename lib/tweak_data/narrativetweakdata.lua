@@ -749,6 +749,7 @@ function NarrativeTweakData:init()
 		"alex",
 		"jewelry_store",
 		"four_stores",
+		"nightclub",
 		"branchbank_deposit",
 		"branchbank_cash"
 	}

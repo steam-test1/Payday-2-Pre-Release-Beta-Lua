@@ -1721,7 +1721,7 @@ function GroupAIStateBase:_execute_so(so_data, so_rooms, so_administered)
 	local access_f = nav_manager.check_access
 	if ai_group == "enemies" then
 		for e_key, enemy_unit_data in pairs(self._police) do
-			if enemy_unit_data.assigned_area and (not so_administered or not so_administered[e_key]) and enemy_unit_data.unit:brain():is_available_for_assignment(so_objective) and (not so_data.verification_clbk or so_data.verification_clbk(enemy_unit_data.unit)) and access_f(nav_manager, so_access, enemy_unit_data.so_access, 0) then
+			if enemy_unit_data.assigned_area and (not so_administered or not so_administered[e_key]) and (so_objective.forced or enemy_unit_data.unit:brain():is_available_for_assignment(so_objective)) and (not so_data.verification_clbk or so_data.verification_clbk(enemy_unit_data.unit)) and access_f(nav_manager, so_access, enemy_unit_data.so_access, 0) then
 				local dis = max_dis and mvec3_dis_sq(enemy_unit_data.m_pos, pos)
 				if (not closest_dis or closest_dis > dis) and (not max_dis or max_dis > dis) then
 					closest_u_data = enemy_unit_data
@@ -1731,7 +1731,7 @@ function GroupAIStateBase:_execute_so(so_data, so_rooms, so_administered)
 		end
 	elseif ai_group == "friendlies" then
 		for u_key, u_unit_data in pairs(self._ai_criminals) do
-			if (not so_administered or not so_administered[u_key]) and u_unit_data.unit:brain():is_available_for_assignment(so_objective) and (not so_data.verification_clbk or so_data.verification_clbk(u_unit_data.unit)) and access_f(nav_manager, so_access, u_unit_data.so_access, 0) then
+			if (not so_administered or not so_administered[u_key]) and (so_objective.forced or u_unit_data.unit:brain():is_available_for_assignment(so_objective)) and (not so_data.verification_clbk or so_data.verification_clbk(u_unit_data.unit)) and access_f(nav_manager, so_access, u_unit_data.so_access, 0) then
 				local dis = mvec3_dis_sq(u_unit_data.m_pos, pos)
 				if (not closest_dis or closest_dis > dis) and (not max_dis or max_dis > dis) then
 					closest_u_data = u_unit_data
@@ -1741,7 +1741,7 @@ function GroupAIStateBase:_execute_so(so_data, so_rooms, so_administered)
 		end
 	elseif ai_group == "civilians" then
 		for u_key, u_unit_data in pairs(managers.enemy:all_civilians()) do
-			if (not so_administered or not so_administered[u_key]) and u_unit_data.unit:brain():is_available_for_assignment(so_objective) and (not so_data.verification_clbk or so_data.verification_clbk(u_unit_data.unit)) and access_f(nav_manager, so_access, u_unit_data.so_access, 0) then
+			if (not so_administered or not so_administered[u_key]) and (so_objective.forced or u_unit_data.unit:brain():is_available_for_assignment(so_objective)) and (not so_data.verification_clbk or so_data.verification_clbk(u_unit_data.unit)) and access_f(nav_manager, so_access, u_unit_data.so_access, 0) then
 				local dis = mvec3_dis_sq(u_unit_data.m_pos, pos)
 				if (not closest_dis or closest_dis > dis) and (not max_dis or max_dis > dis) then
 					closest_u_data = u_unit_data

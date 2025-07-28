@@ -186,7 +186,7 @@ function BlackMarketTweakData:_init_masks()
 	self.masks.clowncry = {}
 	self.masks.clowncry.unit = "units/payday2/masks/msk_clowncry/msk_clowncry"
 	self.masks.clowncry.name_id = "bm_msk_clowncry"
-	self.masks.clowncry.pc = 60
+	self.masks.clowncry.pc = 100
 	self.masks.clowncry.value = 4
 	self.masks.mr_sinister = {}
 	self.masks.mr_sinister.unit = "units/payday2/masks/msk_mr_sinister/msk_mr_sinister"
@@ -1208,9 +1208,10 @@ function BlackMarketTweakData:_init_textures()
 	self.textures.hearts.value = 4
 	self.textures.electric = {}
 	self.textures.electric.name_id = "bm_txt_electric"
-	self.textures.electric.pc = 30
+	self.textures.electric.pc = 100
 	self.textures.electric.texture = "units/payday2/masks/shared_textures/patterns/pattern_electric_df"
 	self.textures.electric.value = 3
+	self.textures.electric.infamous = true
 	self.textures.puzzle = {}
 	self.textures.puzzle.name_id = "bm_txt_puzzle"
 	self.textures.puzzle.pc = 100
@@ -1662,42 +1663,51 @@ function BlackMarketTweakData:_init_cash()
 	self.cash.cash10.name_id = "bm_csh_cash10"
 	self.cash.cash10.value_id = "cash10"
 	self.cash.cash10.multiplier = 1
-	self.cash.cash10.pc = 10
+	self.cash.cash10.pcs = {10, 40}
 	self.cash.cash20 = {}
 	self.cash.cash20.name_id = "bm_csh_cash20"
 	self.cash.cash20.value_id = "cash20"
 	self.cash.cash20.multiplier = 1
-	self.cash.cash20.pc = 10
+	self.cash.cash20.pcs = {20, 40}
 	self.cash.cash30 = {}
 	self.cash.cash30.name_id = "bm_csh_cash30"
 	self.cash.cash30.multiplier = 1
 	self.cash.cash30.value_id = "cash30"
-	self.cash.cash30.pc = 20
+	self.cash.cash30.pcs = {30, 40}
 	self.cash.cash40 = {}
 	self.cash.cash40.name_id = "bm_csh_cash40"
 	self.cash.cash40.multiplier = 1
 	self.cash.cash40.value_id = "cash40"
-	self.cash.cash40.pc = 20
+	self.cash.cash40.pcs = {
+		10,
+		20,
+		30,
+		40
+	}
 	self.cash.cash50 = {}
 	self.cash.cash50.name_id = "bm_csh_cash50"
 	self.cash.cash50.multiplier = 1
 	self.cash.cash50.value_id = "cash50"
-	self.cash.cash50.pc = 30
+	self.cash.cash50.pcs = {
+		20,
+		30,
+		40
+	}
 	self.cash.cash60 = {}
 	self.cash.cash60.name_id = "bm_csh_cash60"
 	self.cash.cash60.value_id = "cash60"
 	self.cash.cash60.multiplier = 1
-	self.cash.cash60.pc = 30
+	self.cash.cash60.pcs = {30, 40}
 	self.cash.cash70 = {}
 	self.cash.cash70.name_id = "bm_csh_cash70"
 	self.cash.cash70.value_id = "cash70"
 	self.cash.cash70.multiplier = 1
-	self.cash.cash70.pc = 40
+	self.cash.cash70.pcs = {30, 40}
 	self.cash.cash80 = {}
 	self.cash.cash80.name_id = "bm_csh_cash80"
 	self.cash.cash80.value_id = "cash80"
 	self.cash.cash80.multiplier = 1
-	self.cash.cash80.pc = 40
+	self.cash.cash80.pcs = {40}
 	self.cash.cash90 = {}
 	self.cash.cash90.name_id = "bm_csh_cash90"
 	self.cash.cash90.value_id = "cash90"
