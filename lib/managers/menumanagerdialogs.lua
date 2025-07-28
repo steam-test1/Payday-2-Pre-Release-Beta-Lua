@@ -476,6 +476,20 @@ function MenuManager:show_new_item_gained(params)
 	managers.system_menu:show_new_unlock(dialog_data)
 end
 
+function MenuManager:show_mask_mods_available(params)
+	local dialog_data = {}
+	dialog_data.title = ""
+	dialog_data.text = params.text_block
+	local ok_button = {}
+	ok_button.text = managers.localization:text("dialog_ok")
+	dialog_data.button_list = {ok_button}
+	dialog_data.text_blend_mode = "add"
+	dialog_data.use_text_formating = true
+	dialog_data.text_formating_color = Color.white
+	dialog_data.text_formating_color_table = params.color_table
+	managers.system_menu:show_new_unlock(dialog_data)
+end
+
 function MenuManager:show_weapon_mods_available(params)
 	local dialog_data = {}
 	dialog_data.title = managers.localization:text("bm_menu_available_mods")
@@ -484,8 +498,10 @@ function MenuManager:show_weapon_mods_available(params)
 	ok_button.text = managers.localization:text("dialog_ok")
 	dialog_data.button_list = {ok_button}
 	dialog_data.texture = "guis/textures/pd2/blackmarket/icons/weapons/" .. tostring(params.weapon_id)
+	dialog_data.text_blend_mode = "add"
 	dialog_data.use_text_formating = true
-	dialog_data.text_formating_color = Color(0.5, 0.5, 0.5)
+	dialog_data.text_formating_color = Color.white
+	dialog_data.text_formating_color_table = params.color_table
 	managers.system_menu:show_new_unlock(dialog_data)
 end
 

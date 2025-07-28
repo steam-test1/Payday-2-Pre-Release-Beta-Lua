@@ -14,16 +14,16 @@ function LootDropTweakData:init(tweak_data)
 		0
 	}
 	self.PC_CHANCE = {}
-	self.PC_CHANCE[1] = 0.75
-	self.PC_CHANCE[2] = 0.75
-	self.PC_CHANCE[3] = 0.75
-	self.PC_CHANCE[4] = 0.75
-	self.PC_CHANCE[5] = 0.75
-	self.PC_CHANCE[6] = 0.75
-	self.PC_CHANCE[7] = 0.75
-	self.PC_CHANCE[8] = 0.75
-	self.PC_CHANCE[9] = 0.75
-	self.PC_CHANCE[10] = 0.75
+	self.PC_CHANCE[1] = 0.7
+	self.PC_CHANCE[2] = 0.7
+	self.PC_CHANCE[3] = 0.7
+	self.PC_CHANCE[4] = 0.7
+	self.PC_CHANCE[5] = 0.7
+	self.PC_CHANCE[6] = 0.7
+	self.PC_CHANCE[7] = 0.7
+	self.PC_CHANCE[8] = 0.7
+	self.PC_CHANCE[9] = 0.7
+	self.PC_CHANCE[10] = 0.7
 	self.STARS = {}
 	self.STARS[1] = {
 		pcs = {
@@ -111,12 +111,12 @@ function LootDropTweakData:init(tweak_data)
 	local min = 10
 	local max = 100
 	local range = {
-		cash = {1, 1},
-		weapon_mods = {2, 2},
-		colors = {0.8, 0.8},
-		textures = {0.9, 0.9},
-		materials = {1, 1},
-		masks = {0.5, 0.5}
+		cash = {20, 20},
+		weapon_mods = {50, 50},
+		colors = {6, 6},
+		textures = {7, 7},
+		materials = {7, 7},
+		masks = {10, 10}
 	}
 	for i = min, max, 10 do
 		local cash = math.lerp(range.cash[1], range.cash[2], i / max)
@@ -141,7 +141,7 @@ function LootDropTweakData:init(tweak_data)
 	self.global_values.normal.color = Color.white
 	self.global_values.normal.dlc = false
 	self.global_values.normal.chance = 0.84
-	self.global_values.normal.value_multiplier = tweak_data.money_manager.global_value_multipliers.normal
+	self.global_values.normal.value_multiplier = tweak_data:get_value("money_manager", "global_value_multipliers", "normal")
 	self.global_values.normal.durability_multiplier = 1
 	self.global_values.normal.drops = true
 	self.global_values.normal.track = false
@@ -152,7 +152,7 @@ function LootDropTweakData:init(tweak_data)
 	self.global_values.superior.color = Color.blue
 	self.global_values.superior.dlc = false
 	self.global_values.superior.chance = 0.1
-	self.global_values.superior.value_multiplier = tweak_data.money_manager.global_value_multipliers.superior
+	self.global_values.superior.value_multiplier = tweak_data:get_value("money_manager", "global_value_multipliers", "superior")
 	self.global_values.superior.durability_multiplier = 1.5
 	self.global_values.superior.drops = false
 	self.global_values.superior.track = false
@@ -163,7 +163,7 @@ function LootDropTweakData:init(tweak_data)
 	self.global_values.exceptional.color = Color.yellow
 	self.global_values.exceptional.dlc = false
 	self.global_values.exceptional.chance = 0.05
-	self.global_values.exceptional.value_multiplier = tweak_data.money_manager.global_value_multipliers.exceptional
+	self.global_values.exceptional.value_multiplier = tweak_data:get_value("money_manager", "global_value_multipliers", "exceptional")
 	self.global_values.exceptional.durability_multiplier = 2.25
 	self.global_values.exceptional.drops = false
 	self.global_values.exceptional.track = false
@@ -174,7 +174,7 @@ function LootDropTweakData:init(tweak_data)
 	self.global_values.infamous.color = Color(1, 0.1, 1)
 	self.global_values.infamous.dlc = false
 	self.global_values.infamous.chance = 0.05
-	self.global_values.infamous.value_multiplier = tweak_data.money_manager.global_value_multipliers.infamous
+	self.global_values.infamous.value_multiplier = tweak_data:get_value("money_manager", "global_value_multipliers", "infamous")
 	self.global_values.infamous.durability_multiplier = 3
 	self.global_values.infamous.drops = true
 	self.global_values.infamous.track = false
@@ -185,7 +185,7 @@ function LootDropTweakData:init(tweak_data)
 	self.global_values.preorder.color = Color(255, 255, 140, 0) / 255
 	self.global_values.preorder.dlc = true
 	self.global_values.preorder.chance = 1
-	self.global_values.preorder.value_multiplier = tweak_data.money_manager.global_value_multipliers.preorder
+	self.global_values.preorder.value_multiplier = tweak_data:get_value("money_manager", "global_value_multipliers", "preorder")
 	self.global_values.preorder.durability_multiplier = 1
 	self.global_values.preorder.drops = false
 	self.global_values.preorder.track = true
@@ -196,7 +196,7 @@ function LootDropTweakData:init(tweak_data)
 	self.global_values.overkill.color = Color(1, 0, 0)
 	self.global_values.overkill.dlc = true
 	self.global_values.overkill.chance = 1
-	self.global_values.overkill.value_multiplier = tweak_data.money_manager.global_value_multipliers.overkill
+	self.global_values.overkill.value_multiplier = tweak_data:get_value("money_manager", "global_value_multipliers", "overkill")
 	self.global_values.overkill.durability_multiplier = 1
 	self.global_values.overkill.drops = false
 	self.global_values.overkill.track = true

@@ -112,7 +112,9 @@ function TextBoxGui:_create_text_box(ws, title, text, content_data, config)
 	local bottom = preset and preset.bottom or config and config.bottom
 	local use_text_formating = preset and preset.use_text_formating or config and config.use_text_formating or false
 	local text_formating_color = preset and preset.text_formating_color or config and config.text_formating_color or Color.white
+	local text_formating_color_table = preset and preset.text_formating_color_table or config and config.text_formating_color_table or nil
 	local is_title_outside = preset and preset.is_title_outside or config and config.is_title_outside or false
+	local text_blend_mode = preset and preset.text_blend_mode or config and config.text_blend_mode or "normal"
 	self._allow_moving = config and config.allow_moving or false
 	local preset_or_config_y = y ~= 0
 	title = title and utf8.to_upper(title)
@@ -231,7 +233,7 @@ function TextBoxGui:_create_text_box(ws, title, text, content_data, config)
 		halign = "left",
 		vertical = "top",
 		valign = "top",
-		blend_mode = "normal"
+		blend_mode = text_blend_mode
 	})
 	if use_text_formating then
 		local text_string = text:text()
@@ -267,7 +269,7 @@ function TextBoxGui:_create_text_box(ws, title, text, content_data, config)
 			Application:error("TextBoxGui: Not even amount of ##'s in skill description string!", #start_ci, #end_ci)
 		else
 			for i = 1, #start_ci do
-				text:set_range_color(start_ci[i], end_ci[i], text_formating_color)
+				text:set_range_color(start_ci[i], end_ci[i], text_formating_color_table and text_formating_color_table[i] or text_formating_color)
 			end
 		end
 	end

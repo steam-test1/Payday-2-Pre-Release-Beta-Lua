@@ -54,6 +54,9 @@ function BlackMarketTweakData:_init_weapon_mods(tweak_data)
 		}
 	end
 	self:_add_desc_from_name_macro(self.weapon_mods)
+	if Application:production_build() and managers.lootdrop then
+		managers.lootdrop:add_qlvl_to_weapon_mods(self.weapon_mods)
+	end
 end
 
 function BlackMarketTweakData:_init_masks()
@@ -76,24 +79,28 @@ function BlackMarketTweakData:_init_masks()
 	self.masks.wolf_clean.pc = 100
 	self.masks.wolf_clean.infamous = true
 	self.masks.wolf_clean.value = 9
+	self.masks.wolf_clean.qlvl = 0
 	self.masks.hoxton_clean = {}
 	self.masks.hoxton_clean.unit = "units/payday2/masks/msk_hoxton_clean/msk_hoxton_clean"
 	self.masks.hoxton_clean.name_id = "bm_msk_hoxton_clean"
 	self.masks.hoxton_clean.pc = 100
 	self.masks.hoxton_clean.infamous = true
 	self.masks.hoxton_clean.value = 9
+	self.masks.hoxton_clean.qlvl = 0
 	self.masks.dallas_clean = {}
 	self.masks.dallas_clean.unit = "units/payday2/masks/msk_dallas_clean/msk_dallas_clean"
 	self.masks.dallas_clean.name_id = "bm_msk_dallas_clean"
 	self.masks.dallas_clean.pc = 100
 	self.masks.dallas_clean.infamous = true
 	self.masks.dallas_clean.value = 10
+	self.masks.dallas_clean.qlvl = 0
 	self.masks.chains_clean = {}
 	self.masks.chains_clean.unit = "units/payday2/masks/msk_chains_clean/msk_chains_clean"
 	self.masks.chains_clean.name_id = "bm_msk_chains_clean"
 	self.masks.chains_clean.pc = 100
 	self.masks.chains_clean.infamous = true
 	self.masks.chains_clean.value = 9
+	self.masks.chains_clean.qlvl = 0
 	self.masks.dallas = {}
 	self.masks.dallas.unit = "units/payday2/masks/msk_dallas/msk_dallas"
 	self.masks.dallas.name_id = "bm_msk_dallas"
@@ -124,24 +131,28 @@ function BlackMarketTweakData:_init_masks()
 	self.masks.cthulhu.pc = 100
 	self.masks.cthulhu.infamous = true
 	self.masks.cthulhu.value = 8
+	self.masks.cthulhu.qlvl = 0
 	self.masks.grin = {}
 	self.masks.grin.unit = "units/payday2/masks/msk_grin/msk_grin"
 	self.masks.grin.name_id = "bm_msk_grin"
 	self.masks.grin.pc = 100
 	self.masks.grin.infamous = true
 	self.masks.grin.value = 8
+	self.masks.grin.qlvl = 0
 	self.masks.anonymous = {}
 	self.masks.anonymous.unit = "units/payday2/masks/msk_anonymous/msk_anonymous"
 	self.masks.anonymous.name_id = "bm_msk_anonymous"
 	self.masks.anonymous.pc = 100
 	self.masks.anonymous.infamous = true
 	self.masks.anonymous.value = 6
+	self.masks.anonymous.qlvl = 0
 	self.masks.dillinger_death_mask = {}
 	self.masks.dillinger_death_mask.unit = "units/payday2/masks/msk_dillinger_death_mask/msk_dillinger_death_mask"
 	self.masks.dillinger_death_mask.name_id = "bm_msk_dillinger_death_mask"
 	self.masks.dillinger_death_mask.pc = 100
 	self.masks.dillinger_death_mask.infamous = true
 	self.masks.dillinger_death_mask.value = 9
+	self.masks.dillinger_death_mask.qlvl = 0
 	self.masks.alienware = {}
 	self.masks.alienware.unit = "units/payday2/masks/msk_alienware/msk_alienware"
 	self.masks.alienware.name_id = "bm_msk_alienware"
@@ -152,6 +163,7 @@ function BlackMarketTweakData:_init_masks()
 	self.masks.greek_tragedy.name_id = "bm_msk_greek_tragedy"
 	self.masks.greek_tragedy.pc = 100
 	self.masks.greek_tragedy.value = 7
+	self.masks.greek_tragedy.qlvl = 0
 	self.masks.jaw = {}
 	self.masks.jaw.unit = "units/payday2/masks/msk_jaw/msk_jaw"
 	self.masks.jaw.name_id = "bm_msk_jaw"
@@ -207,6 +219,7 @@ function BlackMarketTweakData:_init_masks()
 	self.masks.dripper.name_id = "bm_msk_dripper"
 	self.masks.dripper.pc = 100
 	self.masks.dripper.value = 8
+	self.masks.dripper.qlvl = 0
 	self.masks.buha = {}
 	self.masks.buha.unit = "units/payday2/masks/msk_buha/msk_buha"
 	self.masks.buha.name_id = "bm_msk_buha"
@@ -237,6 +250,7 @@ function BlackMarketTweakData:_init_masks()
 	self.masks.hog.name_id = "bm_msk_hog"
 	self.masks.hog.pc = 100
 	self.masks.hog.value = 3
+	self.masks.hog.qlvl = 0
 	self.masks.outlandish_a = {}
 	self.masks.outlandish_a.unit = "units/payday2/masks/msk_outlandish_a/msk_outlandish_a"
 	self.masks.outlandish_a.name_id = "bm_msk_outlandish_a"
@@ -277,6 +291,7 @@ function BlackMarketTweakData:_init_masks()
 	self.masks.scarecrow.name_id = "bm_msk_scarecrow"
 	self.masks.scarecrow.pc = 100
 	self.masks.scarecrow.value = 7
+	self.masks.scarecrow.qlvl = 0
 	self.masks.mummy = {}
 	self.masks.mummy.unit = "units/payday2/masks/msk_mummy/msk_mummy"
 	self.masks.mummy.name_id = "bm_msk_mummy"
@@ -292,6 +307,7 @@ function BlackMarketTweakData:_init_masks()
 	self.masks.day_of_the_dead.name_id = "bm_msk_day_of_the_dead"
 	self.masks.day_of_the_dead.pc = 100
 	self.masks.day_of_the_dead.value = 3
+	self.masks.day_of_the_dead.qlvl = 0
 	self.masks.dawn_of_the_dead = {}
 	self.masks.dawn_of_the_dead.unit = "units/payday2/masks/msk_dawn_of_the_dead/msk_dawn_of_the_dead"
 	self.masks.dawn_of_the_dead.name_id = "bm_msk_dawn_of_the_dead"
@@ -302,6 +318,7 @@ function BlackMarketTweakData:_init_masks()
 	self.masks.demon.name_id = "bm_msk_demon"
 	self.masks.demon.pc = 100
 	self.masks.demon.value = 10
+	self.masks.demon.qlvl = 0
 	self.masks.stonekisses = {}
 	self.masks.stonekisses.unit = "units/payday2/masks/msk_stonekisses/msk_stonekisses"
 	self.masks.stonekisses.name_id = "bm_msk_stonekisses"

@@ -1370,6 +1370,13 @@ function BlackMarketGui:_setup(is_start_page, component_data)
 				name = "bm_menu_btn_buy_new_mask",
 				callback = callback(self, self, "choose_mask_buy_callback")
 			},
+			em_available_mods = {
+				prio = 3,
+				btn = "BTN_Y",
+				pc_btn = Idstring("menu_preview_item_alt"),
+				name = "bm_menu_buy_mask_title",
+				callback = callback(self, self, "show_available_mask_mods_callback")
+			},
 			mm_choose_textures = {
 				prio = 1,
 				btn = "BTN_A",
@@ -1448,7 +1455,7 @@ function BlackMarketGui:_setup(is_start_page, component_data)
 				callback = callback(self, self, "preview_buy_mask_callback")
 			},
 			bm_sell = {
-				prio = 3,
+				prio = 4,
 				btn = "BTN_X",
 				pc_btn = Idstring("menu_remove_item"),
 				name = "bm_menu_btn_sell_mask",
@@ -4859,9 +4866,101 @@ function BlackMarketGui:buy_weapon_callback(data)
 	managers.menu:show_confirm_blackmarket_buy(params)
 end
 
+function BlackMarketGui:show_available_mask_mods_callback(data)
+	local mask_components = {}
+	local masks = deep_clone(managers.blackmarket:get_inventory_masks() or {})
+	for i, data in pairs(masks) do
+		data.name_id = managers.localization:text(tweak_data.blackmarket.masks[data.mask_id].name_id)
+	end
+	local sort_td = tweak_data.blackmarket.masks
+	local x_td, y_td, x_pc, y_pc
+	table.sort(masks, function(x, y)
+		return x.name_id < y.name_id
+	end)
+	mask_components.masks = masks
+	local all_mods = {
+		materials = managers.blackmarket:get_inventory_category("materials"),
+		textures = managers.blackmarket:get_inventory_category("textures"),
+		colors = managers.blackmarket:get_inventory_category("colors")
+	}
+	for _, type_category in ipairs({
+		"materials",
+		"textures",
+		"colors"
+	}) do
+		local items = deep_clone(all_mods[type_category]) or {}
+		local new_node_data = {}
+		local category = type_category or data.category
+		local default = managers.blackmarket:customize_mask_category_default(category)
+		local mods = {}
+		if default then
+			table.insert(mods, default)
+		end
+		local td
+		for i = 1, #items do
+			td = tweak_data.blackmarket[category][items[i].id]
+			if td.texture or td.colors then
+				table.insert(mods, items[i])
+			end
+		end
+		for i, data in pairs(mods) do
+			data.name_id = managers.localization:text(tweak_data.blackmarket[type_category][data.id].name_id)
+		end
+		local sort_td = tweak_data.blackmarket[category]
+		local x_pc, y_pc
+		table.sort(mods, function(x, y)
+			return x.name_id < y.name_id
+		end)
+		mask_components[type_category] = mods
+	end
+	local reload_gui = false
+	local text_block = ""
+	local color_table = {}
+	local i = 1
+	for _, category in ipairs({
+		"masks",
+		"materials",
+		"textures",
+		"colors"
+	}) do
+		local mods = mask_components[category]
+		text_block = text_block .. "--- " .. managers.localization:to_upper_text("bm_menu_" .. category) .. " ---"
+		for _, part_data in ipairs(mods) do
+			local part_id = part_data.id or part_data.mask_id
+			local global_value = part_data.global_value
+			text_block = text_block .. [[
+
+ ]]
+			color_table[i] = tweak_data.lootdrop.global_values[global_value].color
+			text_block = text_block .. "##" .. tostring(part_data.name_id) .. "##"
+			if managers.blackmarket:check_new_drop(global_value, category, part_id) then
+				text_block = text_block .. managers.localization:get_default_macro("BTN_INV_NEW")
+				managers.blackmarket:remove_new_drop(global_value, category, part_id)
+				reload_gui = true
+			end
+			i = i + 1
+		end
+		if category ~= "colors" then
+			text_block = text_block .. [[
+
+
+]]
+		end
+	end
+	local params = {}
+	params.color_table = color_table
+	params.weapon_id = data.name
+	params.text_block = text_block
+	managers.menu:show_mask_mods_available(params)
+	if reload_gui then
+		self:reload()
+	end
+end
+
 function BlackMarketGui:show_available_mods_callback(data)
 	local dropable_mods = managers.blackmarket:get_dropable_mods_by_weapon_id(data.name)
 	local text_block = ""
+	local color_table = {}
 	local index = table.size(dropable_mods)
 	local sort_data = {}
 	for category, mods in pairs(dropable_mods) do
@@ -4890,21 +4989,30 @@ function BlackMarketGui:show_available_mods_callback(data)
 	for category, mods in pairs(dropable_mods) do
 		table.sort(mods, sort_func)
 	end
+	local reload_gui = false
+	local i = 1
 	for _, category in ipairs(sort_data) do
 		local mods = dropable_mods[category]
 		text_block = text_block .. "--- " .. managers.localization:to_upper_text("bm_menu_" .. category) .. " ---"
 		for _, part_data in ipairs(mods) do
 			local part_id = part_data[1]
 			local global_value = part_data[2]
-			local got_part = managers.blackmarket:get_item_amount(global_value, "weapon_mods", part_id) > 0
+			local got_part = managers.blackmarket:get_item_amount(global_value, "weapon_mods", part_id, true) > 0
 			text_block = text_block .. [[
 
  ]]
 			if got_part then
-				text_block = text_block .. managers.localization:text(tweak_data.weapon.factory.parts[part_id].name_id)
+				color_table[i] = tweak_data.lootdrop.global_values[global_value].color
 			else
-				text_block = text_block .. "##" .. managers.localization:text(tweak_data.weapon.factory.parts[part_id].name_id) .. "##"
+				color_table[i] = Color(0.5, 0.5, 0.5)
 			end
+			text_block = text_block .. "##" .. managers.localization:text(tweak_data.weapon.factory.parts[part_id].name_id) .. "##"
+			if managers.blackmarket:check_new_drop(global_value, "weapon_mods", part_id) then
+				text_block = text_block .. managers.localization:get_default_macro("BTN_INV_NEW")
+				managers.blackmarket:remove_new_drop(global_value, "weapon_mods", part_id)
+				reload_gui = true
+			end
+			i = i + 1
 		end
 		index = index - 1
 		if 0 < index then
@@ -4915,9 +5023,13 @@ function BlackMarketGui:show_available_mods_callback(data)
 		end
 	end
 	local params = {}
+	params.color_table = color_table
 	params.weapon_id = data.name
 	params.text_block = text_block
 	managers.menu:show_weapon_mods_available(params)
+	if reload_gui then
+		self:reload()
+	end
 end
 
 function BlackMarketGui:_buy_mask_callback(data)

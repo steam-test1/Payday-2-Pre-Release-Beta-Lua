@@ -20,7 +20,9 @@ function NewUnlockDialog:init(manager, data, is_title_outside)
 		use_indicator = data.indicator or data.no_buttons,
 		is_title_outside = is_title_outside,
 		use_text_formating = data.use_text_formating,
-		text_formating_color = data.text_formating_color
+		text_formating_color = data.text_formating_color,
+		text_formating_color_table = data.text_formating_color_table,
+		text_blend_mode = data.text_blend_mode
 	}
 	local image_config = {
 		w = 128,
@@ -32,6 +34,10 @@ function NewUnlockDialog:init(manager, data, is_title_outside)
 		render_template = data.render_template,
 		shapes = data.shapes
 	}
+	if not data.texture and not data.shapes then
+		image_config.w = 0
+		image_config.h = 0
+	end
 	self._panel_script = _G.ImageBoxGui:new(self._ws, self._data.title or "", self._data.text or "", self._data, text_config, image_config)
 	self._panel_script:add_background()
 	self._panel_script:set_layer(_G.tweak_data.gui.DIALOG_LAYER)

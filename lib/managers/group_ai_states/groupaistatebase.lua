@@ -664,6 +664,9 @@ function GroupAIStateBase:on_hostage_state(state, key, police)
 	end
 	self._hostage_headcount = self._hostage_headcount + d
 	self:sync_hostage_headcount()
+	if self._hostage_headcount == 1 and self._task_data.assault.disabled then
+		managers.dialog:queue_dialog("ban_h01a", {})
+	end
 	if police then
 		self._police_hostage_headcount = self._police_hostage_headcount + d
 	end

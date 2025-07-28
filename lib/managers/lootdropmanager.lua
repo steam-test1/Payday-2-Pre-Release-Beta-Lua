@@ -5,11 +5,42 @@ function LootDropManager:init()
 end
 
 function LootDropManager:_setup()
+	self:add_qlvl_to_weapon_mods()
 	if not Global.lootdrop_manager then
 		Global.lootdrop_manager = {}
 		self:_setup_items()
 	end
 	self._global = Global.lootdrop_manager
+end
+
+function LootDropManager:add_qlvl_to_weapon_mods(override_tweak_data)
+	local weapon_mods_tweak_data = override_tweak_data or tweak_data.blackmarket.weapon_mods
+	local weapon_level_data = {
+		wpn_fps_ass_amcar = 0,
+		wpn_fps_pis_g17 = 0,
+		wpn_fps_saw = 0
+	}
+	for level, data in pairs(tweak_data.upgrades.level_tree) do
+		if data.upgrades then
+			for _, upgrade in ipairs(data.upgrades) do
+				local def = tweak_data.upgrades.definitions[upgrade]
+				if def.weapon_id then
+					local factory_id = managers.weapon_factory:get_factory_id_by_weapon_id(def.weapon_id)
+					weapon_level_data[factory_id] = level
+				end
+			end
+		end
+	end
+	for part_id, data in pairs(tweak_data.weapon.factory.parts) do
+		local weapon_uses_part = managers.weapon_factory:get_weapons_uses_part(part_id) or {}
+		local min_level = managers.experience:level_cap()
+		for _, factory_id in ipairs(weapon_uses_part) do
+			if not table.contains(tweak_data.weapon.factory[factory_id].default_blueprint, part_id) then
+				min_level = math.min(min_level, weapon_level_data[factory_id])
+			end
+		end
+		weapon_mods_tweak_data[part_id].qlvl = min_level
+	end
 end
 
 function LootDropManager:_setup_items()

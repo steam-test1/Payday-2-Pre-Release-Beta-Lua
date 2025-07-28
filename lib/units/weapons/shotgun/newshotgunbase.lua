@@ -148,11 +148,11 @@ function NewShotgunBase:reload_enter_expire_t()
 end
 
 function NewShotgunBase:reload_exit_expire_t()
-	return 1.3
+	return 0.7
 end
 
 function NewShotgunBase:reload_not_empty_exit_expire_t()
-	return 1
+	return 0.3
 end
 
 function NewShotgunBase:start_reload(...)

@@ -355,54 +355,36 @@ function UpgradesTweakData:init()
 	}
 	self.level_tree[50] = {
 		name_id = "lvl_50",
-		announcements = {
-			"menu_es_jobs_available"
-		},
 		upgrades = {
 			"rep_upgrade5"
 		}
 	}
 	self.level_tree[60] = {
 		name_id = "lvl_60",
-		announcements = {
-			"menu_es_jobs_available"
-		},
 		upgrades = {
 			"rep_upgrade6"
 		}
 	}
 	self.level_tree[70] = {
 		name_id = "lvl_70",
-		announcements = {
-			"menu_es_jobs_available"
-		},
 		upgrades = {
 			"rep_upgrade7"
 		}
 	}
 	self.level_tree[80] = {
 		name_id = "lvl_80",
-		announcements = {
-			"menu_es_jobs_available"
-		},
 		upgrades = {
 			"rep_upgrade8"
 		}
 	}
 	self.level_tree[90] = {
 		name_id = "lvl_90",
-		announcements = {
-			"menu_es_jobs_available"
-		},
 		upgrades = {
 			"rep_upgrade9"
 		}
 	}
 	self.level_tree[95] = {
 		name_id = "menu_es_jobs_available",
-		announcements = {
-			"menu_es_jobs_available"
-		},
 		upgrades = {
 			"lucky_charm"
 		}
