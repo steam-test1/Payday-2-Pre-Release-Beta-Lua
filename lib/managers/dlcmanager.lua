@@ -329,11 +329,7 @@ function WINDLCManager:init()
 		Global.dlc_manager = {}
 		Global.dlc_manager.all_dlc_data = {
 			full_game = {app_id = "218620", verified = true},
-			preorder = {
-				app_id = "247450",
-				verified = true,
-				no_install = true
-			}
+			preorder = {app_id = "247450", no_install = true}
 		}
 		self:_verify_dlcs()
 	end

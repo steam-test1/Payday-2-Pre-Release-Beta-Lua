@@ -535,6 +535,13 @@ function WeaponFactoryTweakData:_init_sights()
 		}
 	}
 	self.parts.wpn_fps_upg_o_aimpoint_2 = {
+		pcs = {
+			10,
+			20,
+			30,
+			40
+		},
+		dlc = "preorder",
 		type = "sight",
 		name_id = "bm_wp_upg_o_aimpoint",
 		a_obj = "a_o",

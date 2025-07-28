@@ -1,4 +1,5 @@
 ExperienceManager = ExperienceManager or class()
+ExperienceManager.LEVEL_CAP = Application:digest_value(30, true)
 
 function ExperienceManager:init()
 	self:_setup()
@@ -23,6 +24,13 @@ end
 function ExperienceManager:_set_next_level_data(level)
 	if level > self._total_levels then
 		Application:error("Reached the level cap")
+		if self._experience_progress_data then
+			table.insert(self._experience_progress_data, {
+				level = self._total_levels,
+				current = tweak_data.experience_manager.levels[self._total_levels].points,
+				total = tweak_data.experience_manager.levels[self._total_levels].points
+			})
+		end
 		return
 	end
 	local level_data = tweak_data.experience_manager.levels[level]
@@ -400,7 +408,7 @@ function ExperienceManager:get_xp_dissected(success, num_winners)
 end
 
 function ExperienceManager:level_cap()
-	return 30
+	return Application:digest_value(self.LEVEL_CAP, false)
 end
 
 function ExperienceManager:reached_level_cap()

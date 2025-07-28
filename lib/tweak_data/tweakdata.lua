@@ -30,6 +30,31 @@ TweakData = TweakData or class()
 require("lib/tweak_data/TweakDataPD2")
 TweakData.RELOAD = true
 
+function TweakData:digest_recursive(key, parent)
+	local value = parent and parent[key] or key
+	if type(value) == "table" then
+		for index, data in pairs(value) do
+			self:digest_recursive(index, value)
+		end
+	elseif type(value) == "number" then
+		parent[key] = Application:digest_value(value, true)
+	end
+end
+
+function TweakData:get_value(...)
+	local arg = {
+		...
+	}
+	local value = self
+	for _, v in ipairs(arg) do
+		if not value[v] then
+			return false
+		end
+		value = value[v]
+	end
+	return type(value) == "string" and Application:digest_value(value, false) or value
+end
+
 function TweakData:set_difficulty()
 	if not Global.game_settings then
 		return

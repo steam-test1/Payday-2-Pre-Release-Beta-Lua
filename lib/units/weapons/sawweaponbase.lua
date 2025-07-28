@@ -67,7 +67,7 @@ function SawWeaponBase:setup(setup_data)
 end
 
 function SawWeaponBase:fire(from_pos, direction, dmg_mul, shoot_player, spread_mul, autohit_mul, suppr_mul, target_unit)
-	if self._ammo_remaining_in_clip == 0 then
+	if self:get_ammo_remaining_in_clip() == 0 then
 		return
 	end
 	local user_unit = self._setup.user_unit
@@ -83,8 +83,8 @@ function SawWeaponBase:fire(from_pos, direction, dmg_mul, shoot_player, spread_m
 			end
 		end
 		ammo_usage = ammo_usage + math.ceil(math.random() * 10)
-		self._ammo_remaining_in_clip = math.max(self._ammo_remaining_in_clip - ammo_usage, 0)
-		self._ammo_total = math.max(self._ammo_total - ammo_usage, 0)
+		self:set_ammo_remaining_in_clip(math.max(self:get_ammo_remaining_in_clip() - ammo_usage, 0))
+		self:set_ammo_total(math.max(self:get_ammo_total() - ammo_usage, 0))
 		self:_check_ammo_total(user_unit)
 	else
 		self:_stop_sawing_effect()
@@ -128,7 +128,7 @@ function SawWeaponBase:_fire_raycast(user_unit, from_pos, direction, dmg_mul, sh
 end
 
 function SawWeaponBase:ammo_info()
-	return self._ammo_max_per_clip, self._ammo_remaining_in_clip, self:remaining_full_clips(), self._ammo_max
+	return self:get_ammo_max_per_clip(), self:get_ammo_remaining_in_clip(), self:remaining_full_clips(), self:get_ammo_max()
 end
 
 function SawWeaponBase:can_reload()

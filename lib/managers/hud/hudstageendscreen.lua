@@ -1213,7 +1213,11 @@ function HUDStageEndScreen:stage_spin_levels(t, dt)
 		end
 		self._lp_xp_curr:set_text(managers.money:add_decimal_marks_to_string(tostring(math.floor(self._current_xp))))
 		self._lp_xp_gain:set_text(managers.money:add_decimal_marks_to_string(tostring(math.floor(self._gained_xp))))
-		self._lp_xp_nl:set_text(managers.money:add_decimal_marks_to_string(tostring(math.floor(self._next_level_xp))))
+		if current_level_data.level < managers.experience:level_cap() then
+			self._lp_xp_nl:set_text(managers.money:add_decimal_marks_to_string(tostring(math.floor(self._next_level_xp))))
+		else
+			self._lp_xp_nl:set_text("")
+		end
 	else
 		self._speed = math.max(1.55, self._speed * 0.55)
 		self._top_speed = self._speed
@@ -1241,9 +1245,13 @@ function HUDStageEndScreen:stage_spin_slowdown(t, dt)
 	end
 	local ratio = 1 - self._next_level_xp / data.end_t.total
 	self._lp_circle:set_color(Color(ratio, 1, 1))
-	self._lp_xp_curr:set_text(managers.money:add_decimal_marks_to_string(tostring(math.floor(self._current_xp))))
-	self._lp_xp_gain:set_text(managers.money:add_decimal_marks_to_string(tostring(math.floor(self._gained_xp))))
-	self._lp_xp_nl:set_text(managers.money:add_decimal_marks_to_string(tostring(math.floor(self._next_level_xp))))
+	if data.end_t.level < managers.experience:level_cap() then
+		self._lp_xp_curr:set_text(managers.money:add_decimal_marks_to_string(tostring(math.floor(self._current_xp))))
+		self._lp_xp_gain:set_text(managers.money:add_decimal_marks_to_string(tostring(math.floor(self._gained_xp))))
+		self._lp_xp_nl:set_text(managers.money:add_decimal_marks_to_string(tostring(math.floor(self._next_level_xp))))
+	else
+		self._lp_xp_nl:set_text("")
+	end
 end
 
 function HUDStageEndScreen:stage_end(t, dt)
@@ -1253,10 +1261,15 @@ function HUDStageEndScreen:stage_end(t, dt)
 	self._static_gained_xp = data.gained
 	self._current_xp = self._static_current_xp
 	self._gained_xp = self._static_gained_xp
-	self._lp_circle:set_color(Color(ratio, 1, 1))
 	self._lp_xp_curr:set_text(managers.money:add_decimal_marks_to_string(tostring(math.floor(self._current_xp))))
 	self._lp_xp_gain:set_text(managers.money:add_decimal_marks_to_string(tostring(math.floor(self._gained_xp))))
-	self._lp_xp_nl:set_text(managers.money:add_decimal_marks_to_string(tostring(math.floor(data.end_t.total - data.end_t.current))))
+	if data.end_t.level < managers.experience:level_cap() then
+		self._lp_circle:set_color(Color(ratio, 1, 1))
+		self._lp_xp_nl:set_text(managers.money:add_decimal_marks_to_string(tostring(math.floor(data.end_t.total - data.end_t.current))))
+	else
+		self._lp_circle:set_color(Color(1, 1, 1))
+		self._lp_xp_nl:set_text("")
+	end
 	self._wait_t = t
 	self:step_stage_up()
 end

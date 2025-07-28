@@ -421,9 +421,9 @@ function MoneyManager:_get_weapon_pc(weapon_id)
 	return pc
 end
 
-function MoneyManager:on_buy_weapon_platform(weapon_id)
+function MoneyManager:on_buy_weapon_platform(weapon_id, discount)
 	local amount = self:get_weapon_price_modified(weapon_id)
-	self:_deduct_from_total(amount)
+	self:_deduct_from_total(math.round(amount * (discount and tweak_data.money_manager.sell_weapon_multiplier or 1)))
 end
 
 function MoneyManager:on_sell_weapon(category, slot)

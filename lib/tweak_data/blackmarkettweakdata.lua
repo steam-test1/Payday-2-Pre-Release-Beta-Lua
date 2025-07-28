@@ -45,6 +45,8 @@ function BlackMarketTweakData:_init_weapon_mods(tweak_data)
 		self.weapon_mods[id] = {
 			pc = data.pc,
 			pcs = data.pcs,
+			dlc = data.dlc,
+			dlcs = data.dlcs,
 			name_id = data.name_id,
 			desc_id = data.desc_id,
 			infamous = data.infamous,
@@ -65,6 +67,8 @@ function BlackMarketTweakData:_init_masks()
 	self.masks.skull = {}
 	self.masks.skull.unit = "units/payday2/masks/msk_skull/msk_skull"
 	self.masks.skull.name_id = "bm_msk_skull"
+	self.masks.skull.pc = 100
+	self.masks.skull.dlc = "preorder"
 	self.masks.skull.value = 1
 	self.masks.wolf_clean = {}
 	self.masks.wolf_clean.unit = "units/payday2/masks/msk_wolf_clean/msk_wolf_clean"
@@ -522,6 +526,8 @@ function BlackMarketTweakData:_init_colors()
 	self.colors.red_black = {}
 	self.colors.red_black.colors = {red, black}
 	self.colors.red_black.name_id = "bm_clr_red_black"
+	self.colors.red_black.pc = 100
+	self.colors.red_black.dlc = "preorder"
 	self.colors.red_black.value = 1
 	self.colors.yellow_blue = {}
 	self.colors.yellow_blue.colors = {yellow, blue}
@@ -1479,6 +1485,8 @@ function BlackMarketTweakData:_init_textures()
 	self.textures.compass.value = 2
 	self.textures.fan = {}
 	self.textures.fan.name_id = "bm_txt_fan"
+	self.textures.fan.pc = 100
+	self.textures.fan.dlc = "preorder"
 	self.textures.fan.texture = "units/payday2/masks/shared_textures/patterns/pattern_fan_df"
 	self.textures.fan.value = 1
 	self.textures.pd2 = {}

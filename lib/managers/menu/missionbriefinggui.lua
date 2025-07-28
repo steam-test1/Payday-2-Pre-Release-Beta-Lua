@@ -475,10 +475,10 @@ function AssetsItem:create_assets(assets_names, max_assets)
 			vertical = "top",
 			font_size = tweak_data.menu.pd2_small_font_size,
 			font = tweak_data.menu.pd2_small_font,
-			layer = 2,
+			layer = 4,
 			color = tweak_data.screen_colors.text
 		})
-		self._asset_text:set_top(rect:bottom() + tweak_data.menu.pd2_small_font_size * 0.5)
+		self._asset_text:set_top(rect:bottom() + tweak_data.menu.pd2_small_font_size * 0.5 - 6)
 	end
 	self._my_asset_space = w
 	self._my_left_i = self._my_menu_component_data.my_left_i or 1
@@ -628,7 +628,7 @@ function AssetsItem:select_asset(i, instant)
 		text_string = managers.localization:text(text_string)
 	end
 	text_string = text_string .. "\n"
-	if self._asset_selected == i then
+	if self._asset_selected == i and not instant then
 		return
 	end
 	local is_init = self._asset_selected == nil
@@ -648,7 +648,7 @@ function AssetsItem:select_asset(i, instant)
 		})
 	end
 	if self._asset_locked[i] then
-		local is_server = Network:is_server()
+		local is_server = Network:is_server() or managers.assets.ALLOW_CLIENTS_UNLOCK
 		local can_unlock = self._assets_names[i][5]
 		text_string = self._assets_names[i][6] and text_string or ""
 		if is_server and can_unlock then
@@ -801,7 +801,7 @@ function AssetsItem:_return_asset_info(i)
 	local asset_cost
 	if self._asset_locked[i] then
 		local can_unlock = self._assets_names[i][5] and managers.money:can_afford_mission_asset(self._assets_names[i][4])
-		if Network:is_server() and can_unlock then
+		if (Network:is_server() or managers.assets.ALLOW_CLIENTS_UNLOCK) and can_unlock then
 			asset_cost = managers.money:get_mission_asset_cost_by_id(self._assets_names[i][4])
 		else
 			asset_cost = true
@@ -1145,8 +1145,9 @@ function TeamLoadoutItem:init(panel, text, i)
 			local kit_slot = kit_menu.renderer:get_player_slot_by_peer_id(i)
 			if kit_slot then
 				local outfit = kit_slot.outfit
-				if outfit then
-					self:set_slot_outfit(i, kit_slot.params.character, outfit)
+				local character = kit_slot.params and kit_slot.params.character
+				if outfit and character then
+					self:set_slot_outfit(i, character, outfit)
 				end
 			end
 		end

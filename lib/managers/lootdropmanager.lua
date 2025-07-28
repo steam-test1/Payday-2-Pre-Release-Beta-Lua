@@ -18,16 +18,27 @@ function LootDropManager:_setup_items()
 	
 	local function sort_pc(type, data)
 		for id, item_data in pairs(data) do
-			if item_data.pc then
-				pc_items[item_data.pc] = pc_items[item_data.pc] or {}
-				pc_items[item_data.pc][type] = pc_items[item_data.pc][type] or {}
-				table.insert(pc_items[item_data.pc][type], id)
+			local dlcs = item_data.dlcs or {}
+			local dlc = item_data.dlc
+			if dlc then
+				table.insert(dlcs, dlc)
 			end
-			if item_data.pcs then
-				for _, pc in ipairs(item_data.pcs) do
-					pc_items[pc] = pc_items[pc] or {}
-					pc_items[pc][type] = pc_items[pc][type] or {}
-					table.insert(pc_items[pc][type], id)
+			local has_dlc = #dlcs == 0
+			for _, dlc in pairs(dlcs) do
+				has_dlc = has_dlc or managers.dlc:has_dlc(dlc)
+			end
+			if has_dlc then
+				if item_data.pc then
+					pc_items[item_data.pc] = pc_items[item_data.pc] or {}
+					pc_items[item_data.pc][type] = pc_items[item_data.pc][type] or {}
+					table.insert(pc_items[item_data.pc][type], id)
+				end
+				if item_data.pcs then
+					for _, pc in ipairs(item_data.pcs) do
+						pc_items[pc] = pc_items[pc] or {}
+						pc_items[pc][type] = pc_items[pc][type] or {}
+						table.insert(pc_items[pc][type], id)
+					end
 				end
 			end
 		end
@@ -182,8 +193,23 @@ function LootDropManager:_make_drop(debug, add_to_inventory, debug_stars, return
 			local quality_mul = managers.player:upgrade_value("player", "passive_loot_drop_multiplier", 1) * managers.player:upgrade_value("player", "loot_drop_multiplier", 1)
 			if tweak_data.blackmarket[type_items][item_entry].infamous and global_value_chance < tweak_data.lootdrop.global_values.infamous.chance * quality_mul then
 				global_value = "infamous"
-			elseif global_value_chance < tweak_data.lootdrop.global_values.exceptional.chance * quality_mul then
-			elseif global_value_chance < tweak_data.lootdrop.global_values.superior.chance * quality_mul then
+			else
+				local dlcs = tweak_data.blackmarket[type_items][item_entry].dlcs or {}
+				do
+					local dlc = tweak_data.blackmarket[type_items][item_entry].dlc
+					if dlc then
+						table.insert(dlcs, dlc)
+					end
+				end
+				local dlc_global_values = {}
+				for _, dlc in pairs(dlcs) do
+					if managers.dlc:has_dlc(dlc) then
+						table.insert(dlc_global_values, dlc)
+					end
+				end
+				if 0 < #dlc_global_values then
+					global_value = dlc_global_values[math.random(#dlc_global_values)]
+				end
 			end
 			if not tweak_data.blackmarket[type_items][item_entry].infamous or global_value == "infamous" then
 				has_result = true

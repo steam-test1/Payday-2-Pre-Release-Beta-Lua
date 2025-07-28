@@ -149,6 +149,12 @@ function CopLogicIdle.queued_update(data)
 		CopLogicBase._report_detections(data.detected_attention_objects)
 		return
 	end
+	if data.is_converted and (not data.objective or data.objective.type == "free") and (not data.path_fail_t or data.t - data.path_fail_t > 6) then
+		managers.groupai:state():on_criminal_jobless(data.unit)
+		if my_data ~= data.internal_data then
+			return
+		end
+	end
 	if CopLogicIdle._chk_relocate(data) then
 		return
 	end
@@ -755,7 +761,7 @@ end
 
 function CopLogicIdle._chk_relocate(data)
 	if data.objective and data.objective.type == "follow" then
-		if data.unit:in_slot(16) then
+		if data.is_converted then
 			if TeamAILogicIdle._check_should_relocate(data, data.internal_data, data.objective) then
 				data.objective.in_place = nil
 				CopLogicIdle._exit(data.unit, "travel")

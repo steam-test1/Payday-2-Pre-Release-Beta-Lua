@@ -2310,7 +2310,7 @@ function BlackMarketGui:update_info_text()
 				if slot_data.global_value and slot_data.global_value ~= "normal" then
 					updated_texts[3].text = updated_texts[3].text .. [[
 
-##]] .. managers.localization:to_upper_text(tweak_data.lootdrop.global_values[slot_data.global_value].name_id) .. "##"
+##]] .. managers.localization:to_upper_text(tweak_data.lootdrop.global_values[slot_data.global_value].desc_id) .. "##"
 					updated_texts[3].resource_color = tweak_data.lootdrop.global_values[slot_data.global_value].color
 				end
 				if Application:production_build() and not desc_id then
@@ -2370,7 +2370,7 @@ function BlackMarketGui:update_info_text()
 		if slot_data.global_value and slot_data.global_value ~= "normal" then
 			updated_texts[3].text = updated_texts[3].text .. [[
 
-##]] .. managers.localization:to_upper_text(tweak_data.lootdrop.global_values[slot_data.global_value].name_id) .. "##"
+##]] .. managers.localization:to_upper_text(tweak_data.lootdrop.global_values[slot_data.global_value].desc_id) .. "##"
 			updated_texts[3].resource_color = tweak_data.lootdrop.global_values[slot_data.global_value].color
 		end
 		if (slot_data.equipped or slot_data.unlocked == true or slot_data.unlocked and slot_data.unlocked ~= 0) and not slot_data.empty_slot then
@@ -2470,7 +2470,7 @@ function BlackMarketGui:update_info_text()
 			if slot_data.global_value and slot_data.global_value ~= "normal" then
 				updated_texts[3].text = updated_texts[3].text .. [[
 
-##]] .. managers.localization:to_upper_text(tweak_data.lootdrop.global_values[slot_data.global_value].name_id) .. "##"
+##]] .. managers.localization:to_upper_text(tweak_data.lootdrop.global_values[slot_data.global_value].desc_id) .. "##"
 				updated_texts[3].resource_color = tweak_data.lootdrop.global_values[slot_data.global_value].color
 			end
 			if slot_data.dlc_locked then
@@ -3263,7 +3263,7 @@ function BlackMarketGui:populate_weapon_category(category, data)
 		new_data.category = category
 		new_data.slot = i
 		new_data.unlocked = managers.blackmarket:weapon_unlocked(crafted.weapon_id)
-		new_data.level = not new_data.unlocked and 0
+		new_data.level = managers.blackmarket:weapon_level(crafted.weapon_id)
 		new_data.lock_texture = not new_data.unlocked and (new_data.level == 0 and "guis/textures/pd2/lock_skill" or "guis/textures/pd2/lock_level")
 		new_data.can_afford = true
 		new_data.equipped = crafted.equipped
@@ -3311,7 +3311,7 @@ function BlackMarketGui:populate_weapon_category(category, data)
 			self._equipped_comparision_data = self._equipped_comparision_data or {}
 			self._equipped_comparision_data[category] = new_data.comparision_data
 		end
-		if new_data.name ~= "saw" then
+		if new_data.name ~= "saw" and new_data.unlocked then
 			table.insert(new_data, "w_mod")
 		end
 		if not new_data.last_weapon then
