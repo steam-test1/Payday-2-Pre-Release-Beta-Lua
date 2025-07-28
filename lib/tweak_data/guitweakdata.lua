@@ -4,13 +4,13 @@ function GuiTweakData:init()
 	self.suspicion_to_visibility = {}
 	self.suspicion_to_visibility[1] = {}
 	self.suspicion_to_visibility[1].name_id = "bm_menu_concealment_low"
-	self.suspicion_to_visibility[1].max_index = 3
+	self.suspicion_to_visibility[1].max_index = 9
 	self.suspicion_to_visibility[2] = {}
 	self.suspicion_to_visibility[2].name_id = "bm_menu_concealment_medium"
-	self.suspicion_to_visibility[2].max_index = 7
+	self.suspicion_to_visibility[2].max_index = 20
 	self.suspicion_to_visibility[3] = {}
 	self.suspicion_to_visibility[3].name_id = "bm_menu_concealment_high"
-	self.suspicion_to_visibility[3].max_index = 10
+	self.suspicion_to_visibility[3].max_index = 30
 	self.crime_net = {}
 	self.crime_net.controller = {}
 	self.crime_net.controller.snap_distance = 50
@@ -25,8 +25,8 @@ function GuiTweakData:init()
 	self.crime_net.debug_options = {}
 	self.crime_net.debug_options.regions = false
 	self.crime_net.debug_options.mass_spawn = false
-	self.crime_net.debug_options.mass_spawn_limit = 60
-	self.crime_net.debug_options.mass_spawn_timer = 0.01
+	self.crime_net.debug_options.mass_spawn_limit = 100
+	self.crime_net.debug_options.mass_spawn_timer = 0.04
 	self.crime_net.locations = {}
 	self.mouse_pointer = {}
 	self.mouse_pointer.controller = {}
@@ -912,62 +912,62 @@ function GuiTweakData:init()
 	self.crime_net.map_start_positions = {
 		{
 			max_level = 10,
-			x = 1026,
-			y = 510,
+			x = 789,
+			y = 418,
 			zoom = 4
 		},
 		{
 			max_level = 20,
-			x = 1026,
-			y = 510,
+			x = 789,
+			y = 418,
 			zoom = 4
 		},
 		{
 			max_level = 30,
-			x = 1026,
-			y = 510,
+			x = 789,
+			y = 418,
 			zoom = 4
 		},
 		{
 			max_level = 40,
-			x = 1026,
-			y = 510,
+			x = 789,
+			y = 418,
 			zoom = 4
 		},
 		{
 			max_level = 50,
-			x = 1026,
-			y = 510,
+			x = 789,
+			y = 418,
 			zoom = 4
 		},
 		{
 			max_level = 60,
-			x = 1026,
-			y = 510,
+			x = 789,
+			y = 418,
 			zoom = 4
 		},
 		{
 			max_level = 70,
-			x = 1026,
-			y = 510,
+			x = 789,
+			y = 418,
 			zoom = 4
 		},
 		{
 			max_level = 80,
-			x = 1026,
-			y = 510,
+			x = 789,
+			y = 418,
 			zoom = 4
 		},
 		{
 			max_level = 90,
-			x = 1026,
-			y = 510,
+			x = 789,
+			y = 418,
 			zoom = 4
 		},
 		{
 			max_level = 100,
-			x = 1026,
-			y = 510,
+			x = 789,
+			y = 418,
 			zoom = 4
 		}
 	}
@@ -3388,35 +3388,6 @@ function GuiTweakData:_create_location_spawning_dots()
 end
 
 function GuiTweakData:create_narrative_locations(locations)
-	local regions = {
-		street = true,
-		dock = true,
-		professional = true
-	}
-	local contacts = {
-		vlad = true,
-		the_elephant = true,
-		hector = true,
-		bain = true
-	}
-	local difficulties = {
-		normal = true,
-		hard = true,
-		overkill = true,
-		overkill_145 = true
-	}
-	for region in pairs(regions) do
-		locations[region] = locations[region] or {}
-		for contact in pairs(contacts) do
-			locations[region][contact] = locations[region][contact] or {}
-			for difficulty in pairs(difficulties) do
-				locations[region][contact][difficulty] = locations[region][contact][difficulty] or {}
-				for _, location in ipairs(locations) do
-					table.insert(locations[region][contact][difficulty], location[1])
-				end
-			end
-		end
-	end
 end
 
 function GuiTweakData:print_locations()

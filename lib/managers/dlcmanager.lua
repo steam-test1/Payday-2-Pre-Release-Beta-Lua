@@ -76,6 +76,9 @@ function GenericDLCManager:on_reset_profile()
 	self:give_dlc_package()
 end
 
+function GenericDLCManager:on_signin_complete()
+end
+
 function GenericDLCManager:has_dlc(dlc)
 	local dlc_data = Global.dlc_manager.all_dlc_data[dlc]
 	if not dlc_data then
@@ -313,6 +316,10 @@ function X360DLCManager:_verify_dlcs()
 	end
 end
 
+function X360DLCManager:on_signin_complete()
+	self:_verify_dlcs()
+end
+
 WINDLCManager = WINDLCManager or class(GenericDLCManager)
 DLCManager.PLATFORM_CLASS_MAP[Idstring("WIN32"):key()] = WINDLCManager
 
@@ -322,7 +329,11 @@ function WINDLCManager:init()
 		Global.dlc_manager = {}
 		Global.dlc_manager.all_dlc_data = {
 			full_game = {app_id = "218620", verified = true},
-			preorder = {app_id = "207811", no_install = true}
+			preorder = {
+				app_id = "207811",
+				verified = true,
+				no_install = true
+			}
 		}
 		self:_verify_dlcs()
 	end

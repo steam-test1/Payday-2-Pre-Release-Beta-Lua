@@ -27,6 +27,7 @@ else
 	SavefileManager.LOWEST_COMPATIBLE_VERSION = "1.7"
 end
 SavefileManager.SAVE_SYSTEM = "steam_cloud"
+SavefileManager._USER_ID_OVERRRIDE = nil
 
 function SavefileManager:init()
 	self._active_changed_callback_handler = CoreEvent.CallbackEventHandler:new()
@@ -548,6 +549,10 @@ function SavefileManager:_save_cache(slot)
 		managers.mission:save_job_values(cache)
 		managers.dlc:save(cache)
 	end
+	if SystemInfo:platform() == Idstring("WIN32") then
+		cache.user_id = self._USER_ID_OVERRRIDE or Steam:userid()
+		print("[SavefileManager:_save_cache] user_id:", cache.user_id)
+	end
 	self:_set_cache(slot, cache)
 	self:_set_synched_cache(slot, false)
 end
@@ -623,7 +628,10 @@ function SavefileManager:_load_backup_callback(save_data)
 		local save_data_info = save_data:information()
 		local version = save_data_info.version or 0
 		local version_name = save_data_info.version_name
-		if version <= SavefileManager.VERSION then
+		if SystemInfo:platform() == Idstring("WIN32") and save_data_info.user_id ~= (self._USER_ID_OVERRRIDE or Steam:userid()) then
+			print("[SavefileManager:_load_backup_callback] User ID missmatch. cache.user_id:", save_data_info.user_id, ". expected user id:", self._USER_ID_OVERRRIDE or Steam:userid())
+			self._backup_data = false
+		elseif version <= SavefileManager.VERSION then
 			print("[SavefileManager:_load_backup_callback] backup loaded")
 			self._backup_data = {save_data = save_data}
 		else
@@ -645,6 +653,10 @@ function SavefileManager:_load_callback(save_data)
 	local wrong_user = status == SaveData.WRONG_USER
 	if status == SaveData.OK or wrong_user then
 		cache = save_data:information()
+	end
+	if cache and SystemInfo:platform() == Idstring("WIN32") and cache.user_id ~= (self._USER_ID_OVERRRIDE or Steam:userid()) then
+		print("[SavefileManager:_load_callback] User ID missmatch. cache.user_id:", cache.user_id, ". expected user id:", self._USER_ID_OVERRRIDE or Steam:userid())
+		cache = nil
 	end
 	self._save_sizes = self._save_sizes or {}
 	table.insert(self._save_sizes, size)

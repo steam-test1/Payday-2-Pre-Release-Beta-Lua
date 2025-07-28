@@ -234,6 +234,12 @@ end
 
 function UpgradesTweakData:init()
 	self.level_tree = {}
+	self.level_tree[1] = {
+		name_id = "body_armor",
+		upgrades = {
+			"body_armor2"
+		}
+	}
 	self.level_tree[2] = {
 		name_id = "Angst",
 		upgrades = {"colt_1911", "mac10"}
@@ -247,6 +253,12 @@ function UpgradesTweakData:init()
 		upgrades = {
 			"new_raging_bull",
 			"b92fs"
+		}
+	}
+	self.level_tree[7] = {
+		name_id = "body_armor",
+		upgrades = {
+			"body_armor1"
 		}
 	}
 	self.level_tree[8] = {
@@ -263,10 +275,9 @@ function UpgradesTweakData:init()
 		}
 	}
 	self.level_tree[12] = {
-		name_id = "body_armor",
+		name_id = "body_armor3",
 		upgrades = {
-			"body_armor1",
-			"body_armor2"
+			"body_armor3"
 		}
 	}
 	self.level_tree[13] = {
@@ -291,9 +302,9 @@ function UpgradesTweakData:init()
 		}
 	}
 	self.level_tree[21] = {
-		name_id = "body_armor3",
+		name_id = "body_armor4",
 		upgrades = {
-			"body_armor3"
+			"body_armor4"
 		}
 	}
 	self.level_tree[26] = {
@@ -314,9 +325,9 @@ function UpgradesTweakData:init()
 		}
 	}
 	self.level_tree[31] = {
-		name_id = "body_armor4",
+		name_id = "body_armor5",
 		upgrades = {
-			"body_armor4"
+			"body_armor5"
 		}
 	}
 	self.level_tree[33] = {
@@ -338,12 +349,6 @@ function UpgradesTweakData:init()
 		},
 		upgrades = {
 			"rep_upgrade4"
-		}
-	}
-	self.level_tree[41] = {
-		name_id = "body_armor5",
-		upgrades = {
-			"body_armor5"
 		}
 	}
 	self.level_tree[50] = {

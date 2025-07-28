@@ -52,6 +52,7 @@ function TweakData:_set_easy()
 	self.character:_set_easy()
 	self.group_ai:_set_easy()
 	self.experience_manager.civilians_killed = 15
+	self.difficulty_name_id = self.difficulty_name_ids.easy
 	self.experience_manager.total_level_objectives = 1000
 	self.experience_manager.total_criminals_finished = 25
 	self.experience_manager.total_objectives_finished = 750
@@ -62,6 +63,7 @@ function TweakData:_set_normal()
 	self.character:_set_normal()
 	self.group_ai:_set_normal()
 	self.experience_manager.civilians_killed = 35
+	self.difficulty_name_id = self.difficulty_name_ids.normal
 	self.experience_manager.total_level_objectives = 2000
 	self.experience_manager.total_criminals_finished = 50
 	self.experience_manager.total_objectives_finished = 1000
@@ -72,6 +74,7 @@ function TweakData:_set_hard()
 	self.character:_set_hard()
 	self.group_ai:_set_hard()
 	self.experience_manager.civilians_killed = 75
+	self.difficulty_name_id = self.difficulty_name_ids.hard
 	self.experience_manager.total_level_objectives = 2500
 	self.experience_manager.total_criminals_finished = 150
 	self.experience_manager.total_objectives_finished = 1500
@@ -82,6 +85,7 @@ function TweakData:_set_overkill()
 	self.character:_set_overkill()
 	self.group_ai:_set_overkill()
 	self.experience_manager.civilians_killed = 150
+	self.difficulty_name_id = self.difficulty_name_ids.overkill
 	self.experience_manager.total_level_objectives = 5000
 	self.experience_manager.total_criminals_finished = 500
 	self.experience_manager.total_objectives_finished = 3000
@@ -92,6 +96,7 @@ function TweakData:_set_overkill_145()
 	self.character:_set_overkill_145()
 	self.group_ai:_set_overkill_145()
 	self.experience_manager.civilians_killed = 550
+	self.difficulty_name_id = self.difficulty_name_ids.overkill_145
 	self.experience_manager.total_level_objectives = 5000
 	self.experience_manager.total_criminals_finished = 2000
 	self.experience_manager.total_objectives_finished = 3000
@@ -187,6 +192,12 @@ function TweakData:init()
 		"loading",
 		"in_game"
 	}
+	self.difficulty_name_ids = {}
+	self.difficulty_name_ids.easy = "menu_difficulty_easy"
+	self.difficulty_name_ids.normal = "menu_difficulty_normal"
+	self.difficulty_name_ids.hard = "menu_difficulty_hard"
+	self.difficulty_name_ids.overkill = "menu_difficulty_very_hard"
+	self.difficulty_name_ids.overkill_145 = "menu_difficulty_overkill"
 	self.menu_themes = {
 		old = {
 			bg_startscreen = "guis/textures/menu/old_theme/bg_startscreen",
@@ -2768,6 +2779,11 @@ function TweakData:get_controller_help_coords()
 			align = "right",
 			vertical = "top"
 		}
+	end
+	if managers.user and managers.user:get_setting("southpaw") then
+		local tmp = coords.menu_button_move
+		coords.menu_button_move = coords.menu_button_look
+		coords.menu_button_look = tmp
 	end
 	return coords
 end

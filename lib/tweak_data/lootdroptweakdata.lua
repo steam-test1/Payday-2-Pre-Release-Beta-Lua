@@ -169,7 +169,7 @@ function LootDropTweakData:init(tweak_data)
 	self.global_values.infamous.name_id = "bm_global_value_infamous"
 	self.global_values.infamous.color = Color(1, 0.1, 1)
 	self.global_values.infamous.dlc = false
-	self.global_values.infamous.chance = 0.25
+	self.global_values.infamous.chance = 0.1
 	self.global_values.infamous.value_multiplier = tweak_data.money_manager.global_value_multipliers.infamous
 	self.global_values.infamous.durability_multiplier = 3
 	self.global_values.infamous.drops = true

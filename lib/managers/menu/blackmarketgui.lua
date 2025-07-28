@@ -1583,7 +1583,7 @@ function BlackMarketGui:_setup(is_start_page, component_data)
 			if visibility_index >= i then
 				color = visibility_white_color
 			end
-			local bar = visibility_bar_panel:rect({
+			local bar = visibility_bar_panel:gradient({
 				name = tostring(i),
 				color = color,
 				blend_mode = "add",
@@ -1591,6 +1591,12 @@ function BlackMarketGui:_setup(is_start_page, component_data)
 				layer = 1,
 				w = bar_w,
 				x = (i - 1) * (bar_w + 2)
+			})
+			bar:set_gradient_points({
+				0,
+				color,
+				1,
+				color
 			})
 			bar:grow(-2, -2)
 			bar:move(1, 1)
@@ -1646,11 +1652,24 @@ function BlackMarketGui:_setup(is_start_page, component_data)
 			layer = 2
 		})
 		visiblity_line:set_center_x(current_visibility_bar:left() + current_visibility_bar:w() * visibility_position)
-		self._visibility_diff_bar = visibility_bar_panel:rect({
+		current_visibility_bar:set_gradient_points({
+			0,
+			visibility_white_color,
+			visibility_position,
+			visibility_white_color,
+			visibility_position,
+			visibility_black_color,
+			1,
+			visibility_black_color
+		})
+		self._visibility_diff_bar = visibility_bar_panel:panel({w = 0})
+		self._visibility_diff_bar:rect({
 			color = Color.white,
 			blend_mode = "add",
 			alpha = 0.25,
-			w = 0
+			layer = 2,
+			halign = "grow",
+			valign = "grow"
 		})
 		self._visibility_diff_bar:set_right(visiblity_line:center_x())
 		self._btn_panel = self._panel:panel({
@@ -3567,9 +3586,6 @@ function BlackMarketGui:populate_armors(data)
 			d.name_id
 		})
 	end
-	table.sort(sort_data, function(x, y)
-		return x[1] < y[1]
-	end)
 	local armor_level_data = {}
 	for level, data in pairs(tweak_data.upgrades.level_tree) do
 		if data.upgrades then
@@ -3581,6 +3597,11 @@ function BlackMarketGui:populate_armors(data)
 			end
 		end
 	end
+	table.sort(sort_data, function(x, y)
+		local x_level = x[1] == "level_1" and 0 or armor_level_data[x[1]] or 100
+		local y_level = y[1] == "level_1" and 0 or armor_level_data[y[1]] or 100
+		return x_level < y_level
+	end)
 	local index = 0
 	for i, armor_data in ipairs(sort_data) do
 		local armor_id = armor_data[1]

@@ -85,6 +85,8 @@ function GenericUserManager:setup_setting_map()
 	self:setup_setting(34, "objective_reminder", true)
 	self:setup_setting(35, "effect_quality", _G.tweak_data.EFFECT_QUALITY)
 	self:setup_setting(36, "fov_multiplier", 1)
+	self:setup_setting(37, "southpaw", false)
+	self:setup_setting(38, "dof_setting", "standard")
 end
 
 function GenericUserManager:setup_setting(id, name, default_value)

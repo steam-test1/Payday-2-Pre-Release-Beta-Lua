@@ -489,7 +489,8 @@ function AssetsItem:create_assets(assets_names, max_assets)
 			rotation = 360,
 			w = 32,
 			h = 32,
-			blend_mode = "add"
+			blend_mode = "add",
+			layer = 3
 		})
 		self._move_left_rect:set_center(0, self._panel:h() / 2)
 		self._move_left_rect:set_position(math.round(self._move_left_rect:x()), math.round(self._move_left_rect:y()))
@@ -499,7 +500,8 @@ function AssetsItem:create_assets(assets_names, max_assets)
 			rotation = 180,
 			w = 32,
 			h = 32,
-			blend_mode = "add"
+			blend_mode = "add",
+			layer = 3
 		})
 		self._move_right_rect:set_center(self._panel:w(), self._panel:h() / 2)
 		self._move_right_rect:set_position(math.round(self._move_right_rect:x()), math.round(self._move_right_rect:y()))

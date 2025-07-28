@@ -762,16 +762,36 @@ function WeaponTweakData:_init_stats()
 		10
 	}
 	self.stats.concealment = {
-		1,
-		1,
-		1,
-		1.2,
-		1.2,
-		1.2,
-		1.2,
-		1.3,
-		1.3,
-		1.3
+		0.5,
+		0.5,
+		0.75,
+		0.75,
+		0.75,
+		0.75,
+		0.75,
+		0.75,
+		0.75,
+		1.15,
+		1.15,
+		1.15,
+		1.15,
+		1.15,
+		1.15,
+		1.15,
+		1.15,
+		1.15,
+		1.15,
+		1.15,
+		1.35,
+		1.35,
+		1.35,
+		1.35,
+		1.35,
+		1.35,
+		1.35,
+		1.35,
+		1.5,
+		1.5
 	}
 	self.stats.extra_ammo = {
 		0,
@@ -869,7 +889,7 @@ function WeaponTweakData:_init_new_weapons(autohit_rifle_default, autohit_pistol
 		recoil = 10,
 		spread_moving = 7,
 		zoom = 3,
-		concealment = 8,
+		concealment = 24,
 		suppression = 7,
 		extra_ammo = 1,
 		value = 1
@@ -951,7 +971,7 @@ function WeaponTweakData:_init_new_weapons(autohit_rifle_default, autohit_pistol
 		recoil = 4,
 		spread_moving = 7,
 		zoom = 1,
-		concealment = 10,
+		concealment = 30,
 		suppression = 7,
 		extra_ammo = 1,
 		value = 1
@@ -1033,7 +1053,7 @@ function WeaponTweakData:_init_new_weapons(autohit_rifle_default, autohit_pistol
 		recoil = 6,
 		spread_moving = 7,
 		zoom = 3,
-		concealment = 9,
+		concealment = 27,
 		suppression = 7,
 		extra_ammo = 1,
 		value = 1
@@ -1120,7 +1140,7 @@ function WeaponTweakData:_init_new_weapons(autohit_rifle_default, autohit_pistol
 		recoil = 3,
 		spread_moving = 7,
 		zoom = 3,
-		concealment = 7,
+		concealment = 21,
 		suppression = 7,
 		extra_ammo = 1,
 		value = 1
@@ -1204,7 +1224,7 @@ function WeaponTweakData:_init_new_weapons(autohit_rifle_default, autohit_pistol
 		recoil = 6,
 		spread_moving = 7,
 		zoom = 1,
-		concealment = 10,
+		concealment = 30,
 		suppression = 7,
 		extra_ammo = 1,
 		value = 1
@@ -1282,7 +1302,7 @@ function WeaponTweakData:_init_new_weapons(autohit_rifle_default, autohit_pistol
 		recoil = 8,
 		spread_moving = 7,
 		zoom = 3,
-		concealment = 8,
+		concealment = 24,
 		suppression = 7,
 		extra_ammo = 1,
 		value = 1
@@ -1360,7 +1380,7 @@ function WeaponTweakData:_init_new_weapons(autohit_rifle_default, autohit_pistol
 		recoil = 8,
 		spread_moving = 7,
 		zoom = 4,
-		concealment = 7,
+		concealment = 21,
 		suppression = 7,
 		extra_ammo = 1,
 		value = 1
@@ -1438,7 +1458,7 @@ function WeaponTweakData:_init_new_weapons(autohit_rifle_default, autohit_pistol
 		recoil = 5,
 		spread_moving = 7,
 		zoom = 3,
-		concealment = 9,
+		concealment = 27,
 		suppression = 7,
 		extra_ammo = 1,
 		value = 1
@@ -1516,7 +1536,7 @@ function WeaponTweakData:_init_new_weapons(autohit_rifle_default, autohit_pistol
 		recoil = 9,
 		spread_moving = 7,
 		zoom = 3,
-		concealment = 6,
+		concealment = 18,
 		suppression = 7,
 		extra_ammo = 1,
 		value = 1
@@ -1594,7 +1614,7 @@ function WeaponTweakData:_init_new_weapons(autohit_rifle_default, autohit_pistol
 		recoil = 7,
 		spread_moving = 7,
 		zoom = 3,
-		concealment = 6,
+		concealment = 18,
 		suppression = 7,
 		extra_ammo = 1,
 		value = 1
@@ -1672,7 +1692,7 @@ function WeaponTweakData:_init_new_weapons(autohit_rifle_default, autohit_pistol
 		recoil = 4,
 		spread_moving = 7,
 		zoom = 3,
-		concealment = 8,
+		concealment = 24,
 		suppression = 7,
 		extra_ammo = 1,
 		value = 1
@@ -1752,7 +1772,7 @@ function WeaponTweakData:_init_new_weapons(autohit_rifle_default, autohit_pistol
 		recoil = 5,
 		spread_moving = 7,
 		zoom = 3,
-		concealment = 6,
+		concealment = 18,
 		suppression = 7,
 		extra_ammo = 1,
 		value = 1
@@ -1830,7 +1850,7 @@ function WeaponTweakData:_init_new_weapons(autohit_rifle_default, autohit_pistol
 		recoil = 11,
 		spread_moving = 7,
 		zoom = 3,
-		concealment = 7,
+		concealment = 21,
 		suppression = 7,
 		extra_ammo = 1,
 		value = 1
@@ -1905,7 +1925,7 @@ function WeaponTweakData:_init_new_weapons(autohit_rifle_default, autohit_pistol
 		recoil = 6,
 		spread_moving = 7,
 		zoom = 3,
-		concealment = 8,
+		concealment = 24,
 		suppression = 7,
 		extra_ammo = 1,
 		value = 1
@@ -1980,7 +2000,7 @@ function WeaponTweakData:_init_new_weapons(autohit_rifle_default, autohit_pistol
 		recoil = 11,
 		spread_moving = 7,
 		zoom = 3,
-		concealment = 7,
+		concealment = 21,
 		suppression = 7,
 		extra_ammo = 1,
 		value = 1
@@ -2055,7 +2075,7 @@ function WeaponTweakData:_init_new_weapons(autohit_rifle_default, autohit_pistol
 		recoil = 6,
 		spread_moving = 7,
 		zoom = 3,
-		concealment = 8,
+		concealment = 24,
 		suppression = 7,
 		extra_ammo = 1,
 		value = 1
@@ -2129,7 +2149,7 @@ function WeaponTweakData:_init_new_weapons(autohit_rifle_default, autohit_pistol
 		recoil = 2,
 		spread_moving = 7,
 		zoom = 3,
-		concealment = 6,
+		concealment = 18,
 		suppression = 7,
 		extra_ammo = 1,
 		value = 1
@@ -2203,7 +2223,7 @@ function WeaponTweakData:_init_new_weapons(autohit_rifle_default, autohit_pistol
 		recoil = 2,
 		spread_moving = 7,
 		zoom = 3,
-		concealment = 9,
+		concealment = 27,
 		suppression = 7,
 		extra_ammo = 1,
 		value = 1
@@ -2280,7 +2300,7 @@ function WeaponTweakData:_init_new_weapons(autohit_rifle_default, autohit_pistol
 		recoil = 9,
 		spread_moving = 7,
 		zoom = 3,
-		concealment = 8,
+		concealment = 24,
 		suppression = 7,
 		extra_ammo = 1,
 		value = 1
@@ -2357,7 +2377,7 @@ function WeaponTweakData:_init_new_weapons(autohit_rifle_default, autohit_pistol
 		recoil = 2,
 		spread_moving = 7,
 		zoom = 3,
-		concealment = 10,
+		concealment = 30,
 		suppression = 7,
 		extra_ammo = 1,
 		value = 1
@@ -2434,7 +2454,7 @@ function WeaponTweakData:_init_new_weapons(autohit_rifle_default, autohit_pistol
 		recoil = 4,
 		spread_moving = 7,
 		zoom = 3,
-		concealment = 9,
+		concealment = 27,
 		suppression = 7,
 		extra_ammo = 1,
 		value = 1
@@ -2511,7 +2531,7 @@ function WeaponTweakData:_init_new_weapons(autohit_rifle_default, autohit_pistol
 		recoil = 5,
 		spread_moving = 7,
 		zoom = 3,
-		concealment = 8,
+		concealment = 24,
 		suppression = 7,
 		extra_ammo = 1,
 		value = 1
@@ -2604,7 +2624,7 @@ function WeaponTweakData:_init_new_weapons(autohit_rifle_default, autohit_pistol
 		recoil = 6,
 		spread_moving = 7,
 		zoom = 3,
-		concealment = 7,
+		concealment = 21,
 		suppression = 7,
 		extra_ammo = 1,
 		value = 1
@@ -2680,7 +2700,7 @@ function WeaponTweakData:_init_new_weapons(autohit_rifle_default, autohit_pistol
 		recoil = 6,
 		spread_moving = 7,
 		zoom = 3,
-		concealment = 10,
+		concealment = 30,
 		suppression = 7,
 		extra_ammo = 1,
 		value = 1
@@ -2760,7 +2780,7 @@ function WeaponTweakData:_init_new_weapons(autohit_rifle_default, autohit_pistol
 		recoil = 3,
 		spread_moving = 7,
 		zoom = 3,
-		concealment = 9,
+		concealment = 27,
 		suppression = 7,
 		extra_ammo = 1,
 		value = 1
@@ -2857,7 +2877,7 @@ function WeaponTweakData:_init_new_weapons(autohit_rifle_default, autohit_pistol
 		recoil = 7,
 		spread_moving = 7,
 		damage = 10,
-		concealment = 6,
+		concealment = 18,
 		value = 1,
 		extra_ammo = 1
 	}

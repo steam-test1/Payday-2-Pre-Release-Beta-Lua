@@ -98,6 +98,7 @@ function MenuManager:init(is_start_menu)
 	managers.user:add_setting_changed_callback("voice_volume", callback(self, self, "voice_volume_changed"), true)
 	managers.user:add_setting_changed_callback("use_lightfx", callback(self, self, "lightfx_changed"), true)
 	managers.user:add_setting_changed_callback("effect_quality", callback(self, self, "effect_quality_changed"), true)
+	managers.user:add_setting_changed_callback("dof_setting", callback(self, self, "dof_setting_changed"), true)
 	managers.user:add_active_user_state_changed_callback(callback(self, self, "on_user_changed"))
 	managers.user:add_storage_changed_callback(callback(self, self, "on_storage_changed"))
 	managers.savefile:add_active_changed_callback(callback(self, self, "safefile_manager_active_changed"))
@@ -106,6 +107,7 @@ function MenuManager:init(is_start_menu)
 	self:brightness_changed(nil, nil, managers.user:get_setting("brightness"))
 	self:effect_quality_changed(nil, nil, managers.user:get_setting("effect_quality"))
 	self:invert_camera_y_changed("invert_camera_y", nil, managers.user:get_setting("invert_camera_y"))
+	self:dof_setting_changed("dof_setting", nil, managers.user:get_setting("dof_setting"))
 	managers.system_menu:add_active_changed_callback(callback(self, self, "system_menu_active_changed"))
 	self._sound_source = SoundDevice:create_source("MenuManager")
 end
@@ -455,6 +457,10 @@ function MenuManager:southpaw_changed(name, old_value, new_value)
 		look_connection:set_input_name_list({"right"})
 	end
 	managers.controller:rebind_connections()
+end
+
+function MenuManager:dof_setting_changed(name, old_value, new_value)
+	managers.environment_controller:set_dof_setting(new_value)
 end
 
 function MenuManager:subtitle_changed(name, old_value, new_value)
@@ -1029,6 +1035,10 @@ function MenuCallbackHandler:is_normal_job()
 	return not self:is_prof_job()
 end
 
+function MenuCallbackHandler:singleplayer_restart()
+	return self:is_singleplayer() and self:has_full_game() and self:is_normal_job() and not managers.job:stage_success()
+end
+
 function MenuCallbackHandler:hidden()
 	return false
 end
@@ -1198,6 +1208,11 @@ function MenuCallbackHandler:invert_camera_vertically(item)
 end
 
 function MenuCallbackHandler:toggle_southpaw(item)
+end
+
+function MenuCallbackHandler:toggle_dof_setting(item)
+	local dof_setting = item:value() == "on"
+	managers.user:set_setting("dof_setting", dof_setting and "standard" or "none")
 end
 
 function MenuCallbackHandler:hold_to_steelsight(item)
@@ -1870,6 +1885,10 @@ end
 function MenuCallbackHandler:restart_game(item)
 	managers.menu:show_restart_game_dialog({
 		yes_func = function()
+			if managers.job:stage_success() then
+				print("No restart after stage success")
+				return
+			end
 			managers.statistics:stop_session()
 			managers.savefile:save_progress()
 			managers.groupai:state():set_AI_enabled(false)
@@ -3554,6 +3573,14 @@ function MenuOptionInitiator:modify_adv_video(node)
 	node:item("choose_anisotropic"):set_value(RenderSettings.max_anisotropy)
 	if node:item("fov_multiplier") then
 		node:item("fov_multiplier"):set_value(managers.user:get_setting("fov_multiplier"))
+	end
+	local option_value = "off"
+	local dof_setting_item = node:item("toggle_dof")
+	if dof_setting_item then
+		if managers.user:get_setting("dof_setting") ~= "none" then
+			option_value = "on"
+		end
+		dof_setting_item:set_value(option_value)
 	end
 	return node
 end

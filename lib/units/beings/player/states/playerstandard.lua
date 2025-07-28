@@ -640,7 +640,6 @@ end
 
 function PlayerStandard:_end_action_steelsight(t)
 	self._state_data.in_steelsight = false
-	managers.environment_controller:set_dof_distance()
 	self:_stance_entered()
 	self:_update_crosshair_offset()
 	self._equipped_unit:base():play_tweak_data_sound("leave_steelsight")
